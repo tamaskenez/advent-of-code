@@ -46,11 +46,19 @@ using VS = vector<string>;
 using VB = vector<bool>;
 using AI2 = array<int, 2>;
 using AI3 = array<int, 3>;
+template <class T>
+using maybe = optional<T>;
 
 AI2 operator+(AI2 x, AI2 y)
 {
     return AI2{x[0] + y[0], x[1] + y[1]};
 }
+void operator+=(AI2& x, AI2 y)
+{
+    x[0] += y[0];
+    x[1] += y[1];
+}
+
 int as_int(int64_t x)
 {
     assert(INT_MIN <= x && x <= INT_MAX);
@@ -93,11 +101,6 @@ void print(const VI64 outputs)
         printf("%c", (char)c);
     }
 }
-void operator+=(AI2& x, AI2 y)
-{
-    x[0] += y[0];
-    x[1] += y[1];
-}
 
 VS read_lines(ifstream& f)
 {
@@ -138,3 +141,93 @@ map<int64_t, int> prime_factors(int64_t p)
     }
     return factors;
 }
+
+bool starts_with(const string& s, const string& t)
+{
+    if (~s < ~t) {
+        return false;
+    }
+    FOR (i, 0, < ~t) {
+        if (s[i] != t[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool starts_with(const string& s, const char* t)
+{
+    auto ls = ~s;
+    for (int i = 0;; ++i) {
+        auto tc = t[i];
+        if (tc == 0) {
+            return true;
+        }
+        if (i >= ls || s[i] != tc) {
+            return false;
+        }
+    }
+}
+
+string trim(string s)
+{
+    int i = 0;
+    while (i < ~s && iswspace(s[i])) {
+        ++i;
+    }
+    int j = ~s;
+    while (j <= ~s && i < j && iswspace(s[j - 1])) {
+        --j;
+    }
+    return s.substr(i, j - i);
+}
+
+// Multiple seperators count as one.
+// In other words, doesn't return empty tokens.
+VS split(const string& s, const char* separators)
+{
+    vector<char> input(~s + 1);
+    copy(BE(s), input.begin());
+    input[~s] = 0;
+    char* token = std::strtok(input.data(), separators);
+    VS r;
+    while (token) {
+        r.push_back(token);
+        token = std::strtok(nullptr, separators);
+    }
+    return r;
+}
+
+void common_test()
+{
+    FOR (i, 0, < 4) {
+        FOR (j, 0, < 4) {
+            FOR (k, 0, < 4) {
+                auto si = string(i, ' ');
+                auto sj = string(j, 'a');
+                auto sk = string(k, ' ');
+                assert(trim(si + sj + sk) == sj);
+            }
+        }
+    }
+}
+
+template <class T>
+struct RunningStat
+{
+    optional<T> lower, upper;
+    int count = 0;
+    void add(T x)
+    {
+        if (++count == 1) {
+            lower = x;
+            upper = x;
+        } else {
+            if (x < *lower) {
+                lower = x;
+            } else if (*upper < x) {
+                upper = x;
+            }
+        }
+    }
+};
