@@ -114,10 +114,45 @@ VS read_lines(ifstream& f)
     return lines;
 }
 
+// findable containers (maps): find != end
 template <class T, class U>
-bool findable(const T& m, const U& v)
+bool contains(const T& m, const U& v)
 {
     return m.find(v) != m.end();
+}
+
+// linear find between iterators: find != last
+template <class T, class U>
+bool contains(T first, T last, const U& v)
+{
+    return find(first, last, v) != last;
+}
+
+template <class T, class U>
+auto try_find_v(const T& m, const U& v) -> maybe<const typename T::mapped_type&>
+{
+    auto it = m.find(v);
+    if (it != m.end()) {
+        return it->second;
+    }
+    return {};
+}
+
+template <class T, class U>
+auto try_find_v(T& m, const U& v) -> maybe<typename T::mapped_type&>
+{
+    auto it = m.find(v);
+    if (it != m.end()) {
+        return it->second;
+    }
+    return {};
+}
+
+template <class T, class U>
+void must_insert(T& m, U&& value)
+{
+    auto itb = m.insert(forward<U>(value));
+    assert(itb.second);
 }
 
 map<int64_t, int> prime_factors(int64_t p)
