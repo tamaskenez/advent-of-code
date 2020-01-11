@@ -43,7 +43,7 @@ int encode(const string& x)
                 ++r;
         }
     }
-    return r+2;
+    return r + 2;
 }
 
 int main()
@@ -65,5 +65,5 @@ int main()
     printf("Part2 %d\n", encoded - in_code);
     return 0;
 }
-//1485 not
+// 1485 not
 // 18:43
