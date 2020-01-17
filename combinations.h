@@ -404,8 +404,8 @@ UInt gcd(UInt x, UInt y)
 }
 
 template <class Int>
-inline typename std::enable_if<std::is_unsigned<Int>::value, void>::type check_non_negative(Int d1,
-                                                                                            Int d2)
+inline
+    typename std::enable_if<std::is_unsigned<Int>::value, void>::type check_non_negative(Int, Int)
 {}
 
 template <class Int>
