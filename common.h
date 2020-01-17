@@ -42,6 +42,7 @@ void sort_unique_trunc(C& x)
 using PII = pair<int, int>;
 using VI = vector<int>;
 using VVI = vector<VI>;
+using VF = vector<float>;
 using VS = vector<string>;
 using VB = vector<bool>;
 using AI2 = array<int, 2>;
@@ -266,3 +267,49 @@ struct RunningStat
         }
     }
 };
+
+template <class Iterator>
+auto sum(Iterator b, Iterator e)
+{
+    using value_t = decay_t<decltype(*b)>;
+    return accumulate(b, e, (value_t)0);
+}
+
+template <class Iterator>
+auto product(Iterator b, Iterator e)
+{
+    using value_t = decay_t<decltype(*b)>;
+    return accumulate(b, e, (value_t)1, multiplies<value_t>());
+}
+
+template <class Iterator>
+auto diff(Iterator b, Iterator e)
+{
+    assert(b != e);
+    auto bb = b;
+    ++bb;
+    assert(bb != e);
+    using value_t = decay_t<decltype(*b)>;
+    vector<value_t> r;
+    r.reserve(max<ptrdiff_t>(e - b, 0));
+    for (; bb != e; ++b, ++bb) {
+        r.PB(*bb - *b);
+    }
+    return r;
+}
+
+template <class Iterator>
+string to_string(Iterator b, Iterator e)
+{
+    string s;
+    bool first = true;
+    for (; b != e; ++b) {
+        if (first) {
+            first = false;
+        } else {
+            s += ' ';
+        }
+        s += to_string(*b);
+    }
+    return s;
+}
