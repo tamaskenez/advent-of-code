@@ -65,6 +65,7 @@ int as_int(int64_t x)
     assert(INT_MIN <= x && x <= INT_MAX);
     return (int)x;
 }
+
 int manhattan(AI2 a, AI2 b)
 {
     return abs(a[0] - b[0]) + abs(a[1] - b[1]);
@@ -268,6 +269,90 @@ struct RunningStat
     }
 };
 
+// Like RunningStat (remembering lower, upper of a number sequence) but also
+// remembering a value for each number.
+template <class T, class V>
+struct RunningStatPair
+{
+    optional<pair<T, V>> lower, upper;
+    int count = 0;
+    void add(T x, const V& v)
+    {
+        if (++count == 1) {
+            lower = make_pair(x, v);
+            upper = make_pair(x, v);
+        } else {
+            if (x < *lower) {
+                lower = make_pair(x, v);
+            } else if (*upper < x) {
+                upper = make_pair(x, v);
+            }
+        }
+    }
+};
+
+template <class Iterator>
+Iterator min_element_pair_second(Iterator b, Iterator e)
+{
+    if (b == e) {
+        return e;
+    }
+    auto r = b;
+    for (++b; b != e; ++b) {
+        if (b->SND < r->SND) {
+            r = b;
+        }
+    }
+    return r;
+}
+
+template <class Iterator>
+Iterator max_element_pair_second(Iterator b, Iterator e)
+{
+    if (b == e) {
+        return e;
+    }
+    auto r = b;
+    for (++b; b != e; ++b) {
+        if (b->SND > r->SND) {
+            r = b;
+        }
+    }
+    return r;
+}
+
+template <class Iterator>
+pair<Iterator, Iterator> minmax_element_pair_second(Iterator b, Iterator e)
+{
+    if (b == e) {
+        return make_pair(e, e);
+    }
+    auto r = make_pair(b, b);
+    for (++b; b != e; ++b) {
+        if (b->SND < r.FST->SND) {
+            r.FST = b;
+        }
+        if (b->SND > r.SND->SND) {
+            r.SND = b;
+        }
+    }
+    return r;
+}
+
+// map's value_type, which is pair, swapping first and second, into vector.
+template <class M>
+auto map_to_vector_swapped(const M& m)
+{
+    using swapped_value_type =
+        pair<typename M::value_type::second_type, typename M::value_type::first_type>;
+    vector<swapped_value_type> vs;
+    vs.reserve(~m);
+    for (auto& kv : m) {
+        vs.emplace_back(kv.SND, kv.FST);
+    }
+    return vs;
+}
+
 template <class Iterator>
 auto sum(Iterator b, Iterator e)
 {
@@ -312,4 +397,24 @@ string to_string(Iterator b, Iterator e)
         s += to_string(*b);
     }
     return s;
+}
+
+#define UNREACHABLE assert(false)
+
+template <class T>
+void assert_between_cc(const T& x, T lo, T hi)
+{
+    (void)x;
+    (void)lo;
+    (void)hi;
+    assert(lo <= x && x <= hi);
+}
+
+template <class T>
+void assert_between_co(const T& x, T lo, T hi)
+{
+    (void)x;
+    (void)lo;
+    (void)hi;
+    assert(lo <= x && x < hi);
 }

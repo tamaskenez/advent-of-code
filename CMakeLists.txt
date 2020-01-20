@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(aoc)
 
+set(ONLY_THIS_YEAR 2016)
 
 set(WARNINGS_AS_ERRORS 1)
 
@@ -22,5 +23,9 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
-add_subdirectory(2015)
-add_subdirectory(2019)
+
+foreach(year 2015 2016 2019)
+  if(NOT ONLY_THIS_YEAR OR (ONLY_THIS_YEAR STREQUAL year))
+    add_subdirectory(${year})
+  endif()
+endforeach()
