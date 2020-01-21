@@ -54,6 +54,10 @@ AI2 operator+(AI2 x, AI2 y)
 {
     return AI2{x[0] + y[0], x[1] + y[1]};
 }
+AI2 operator-(AI2 x, AI2 y)
+{
+    return AI2{x[0] - y[0], x[1] - y[1]};
+}
 void operator+=(AI2& x, AI2 y)
 {
     x[0] += y[0];
@@ -408,6 +412,18 @@ void assert_between_cc(const T& x, T lo, T hi)
     (void)lo;
     (void)hi;
     assert(lo <= x && x <= hi);
+}
+
+template <class T>
+bool is_between_cc(const T& x, T lo, T hi)
+{
+    return lo <= x && x <= hi;
+}
+
+template <class T>
+bool is_between_co(const T& x, T lo, T hi)
+{
+    return lo <= x && x < hi;
 }
 
 template <class T>
