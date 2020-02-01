@@ -434,3 +434,10 @@ void assert_between_co(const T& x, T lo, T hi)
     (void)hi;
     assert(lo <= x && x < hi);
 }
+
+const array<AI2, 4> DIRS4 = {
+    AI2{1, 0},
+    AI2{-1, 0},
+    AI2{0, 1},
+    AI2{0, -1},
+};
