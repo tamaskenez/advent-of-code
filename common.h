@@ -64,6 +64,13 @@ void operator+=(AI2& x, AI2 y)
     x[1] += y[1];
 }
 
+void operator+=(AI3& x, AI3 y)
+{
+    x[0] += y[0];
+    x[1] += y[1];
+    x[2] += y[2];
+}
+
 int as_int(int64_t x)
 {
     assert(INT_MIN <= x && x <= INT_MAX);
