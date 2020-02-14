@@ -448,3 +448,27 @@ const array<AI2, 4> DIRS4 = {
     AI2{0, 1},
     AI2{0, -1},
 };
+
+template <class Ita, class Itb>
+auto set_intersection(Ita abeg, Ita aend, Itb bbeg, Itb bend)
+{
+    using T = decay_t<decltype(*abeg)>;
+    vector<T> vs;
+    set_intersection(abeg, aend, bbeg, bend, back_inserter(vs));
+    return vs;
+}
+
+template <class Ita, class Itb>
+auto set_difference(Ita abeg, Ita aend, Itb bbeg, Itb bend)
+{
+    using T = decay_t<decltype(*abeg)>;
+    vector<T> vs;
+    set_difference(abeg, aend, bbeg, bend, back_inserter(vs));
+    return vs;
+}
+
+template <class T>
+set<T> vector2set(const vector<T>& vs)
+{
+    return set<T>(BE(vs));
+}
