@@ -21,6 +21,10 @@ using namespace std;
 #define FOR(VAR, FROM, OP_TO) for (auto VAR = (FROM); VAR OP_TO; ++(VAR))
 #define FORBACK(VAR, FROM, OP_TO) for (auto VAR = (FROM); VAR OP_TO; --(VAR))
 #define FORBE(VAR, X) for (auto VAR = begin(X); (VAR) != end(X); ++(VAR))
+#define MKP make_pair
+
+#define CALL(F) ([](auto&& x) { return F(forward<decltype(x)>(x)); })
+
 #define PB push_back
 #define EB emplace_back
 #define PF printf
@@ -139,6 +143,16 @@ template <class T, class U>
 bool contains(T first, T last, const U& v)
 {
     return find(first, last, v) != last;
+}
+
+bool contains(const char* s, char c)
+{
+    return strchr(s, c) != nullptr;
+}
+
+bool contains(const string& s, char c)
+{
+    return s.find(c) != string::npos;
 }
 
 template <class T, class U>
@@ -471,4 +485,27 @@ template <class T>
 set<T> vector2set(const vector<T>& vs)
 {
     return set<T>(BE(vs));
+}
+
+template <class It, class Pr>
+auto map_to_vec(It b, It e, Pr pr)
+{
+    using T = decay_t<decltype(pr(*b))>;
+    vector<T> vs;
+    for (; b != e; ++b) {
+        vs.EB(pr(*b));
+    }
+    return vs;
+}
+
+template <class C, class Pr>
+auto map_to_vec(const C& c, Pr pr)
+{
+    using T = decay_t<decltype(pr(*begin(c)))>;
+    vector<T> vs;
+    vs.reserve(size(c));
+    for (auto& x : c) {
+        vs.EB(pr(x));
+    }
+    return vs;
 }
