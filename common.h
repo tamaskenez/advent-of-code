@@ -31,11 +31,12 @@ using namespace std;
 #define FST first
 #define SND second
 
-template <class T>
-int operator~(const T& x)
+template <class T, typename = enable_if_t<is_invocable_v<decltype(std::size<T>), T>>>
+int operator~(const T& v)
 {
-    return (int)x.size();
+    return (int)size(v);
 }
+
 template <class C>
 void sort_unique_trunc(C& x)
 {
