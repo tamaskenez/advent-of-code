@@ -88,6 +88,17 @@ auto operator*(const array<T, N>& x, U y)
     return r;
 }
 
+template <class T, size_t N, class U>
+auto operator/(const array<T, N>& x, U y)
+{
+    using R = decltype(x[0] / y);
+    array<R, N> r;
+    FOR (i, (size_t)0, < N) {
+        r[i] = x[i] / y;
+    }
+    return r;
+}
+
 template <class T, class U, size_t N>
 void operator+=(array<T, N>& x, const array<U, N>& y)
 {
@@ -120,15 +131,14 @@ int as_int(int64_t x)
     return (int)x;
 }
 
-int manhattan(AI2 a, AI2 b)
+template <class T, size_t N>
+T manhattan(const array<T, N>& a, const array<T, N>& b)
 {
-    return abs(a[0] - b[0]) + abs(a[1] - b[1]);
-}
-
-template <class T>
-T manhattan(const array<T, 3>& a, const array<T, 3>& b)
-{
-    return abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2]);
+    T s(0);
+    FOR (i, (size_t)0, < N) {
+        s += abs(a[i] - b[i]);
+    }
+    return s;
 }
 
 using VI64 = vector<int64_t>;

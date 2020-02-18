@@ -249,6 +249,28 @@ maybe<AL3> get_intersection(AL3 a0, AL3 a1, AL3 b0, AL3 b1)
     return {};
 }
 
+I64 point_cube_distance(AL3 p, AL3 lower, AL3 upper)
+{
+    I64 d = 0;
+    FOR (w, 0, < 3) {
+        if (upper[w] < p[w] || p[w] < lower[w]) {
+            d += min(abs(upper[w] - p[w]), abs(lower[w] - p[w]));
+        }
+    }
+    return d;
+}
+
+int bots_in_cube(const vector<Bot>& bots, AL3 lower, AL3 upper)
+{
+    int count = 0;
+    for (auto& b : bots) {
+        if (point_cube_distance(b.pos, lower, upper) <= b.r) {
+            ++count;
+        }
+    }
+    return count;
+}
+
 int main()
 {
     ifstream f(CMAKE_CURRENT_SOURCE_DIR "/d23_input.txt");
@@ -285,6 +307,66 @@ int main()
             }
         }
         printf("in strongest range: count %d\n", count);
+    }
+
+    if (1) {
+        RunningStat<I64> rr[3];
+        for (auto& b : bots) {
+            FOR (i, 0, < 3) {
+                rr[i].add(b.pos[i]);
+            }
+        }
+        AL3 lower, upper;
+        FOR (i, 0, < 3) {
+            rr[i].add(0);  // make sure origin is there.
+            lower[i] = *rr[i].lower;
+            upper[i] = *rr[i].upper;
+        }
+        map<pair<int, I64>, vector<pair<AL3, AL3>>>
+            M;  //(upper bound of bots, lower bound of dist)-> cube
+        M.emplace(MKP(-~bots, 0LL), vector<pair<AL3, AL3>>{MKP(lower, upper)});
+        while (!M.empty()) {
+            auto it = M.begin();
+            if (it->second.empty()) {
+                M.erase(it);
+                continue;
+            }
+            auto [max_botcount, min_dist] = it->first;
+            auto cube = it->second.back();
+            it->second.pop_back();
+            if (cube.second == cube.first + AL3{1, 1, 1}) {
+                printf("Found: %d bots, %lld dist (%lld,%lld,%lld)\n", max_botcount, min_dist,
+                       cube.first[0], cube.first[1], cube.first[2]);
+                exit(0);
+            }
+            auto mid = (cube.first + cube.second) / 2;
+            FOR (k, 0, < 8) {
+                AL3 lower, upper;
+                FOR (w, 0, < 3) {
+                    if (k & (1 << w)) {
+                        lower[w] = cube.first[w];
+                        upper[w] = mid[w];
+                    } else {
+                        lower[w] = mid[w] + 1;
+                        upper[w] = cube.second[w];
+                    }
+                }
+                bool zero_dim = false;
+                FOR (w, 0, < 3) {
+                    if (lower[w] >= upper[w]) {
+                        zero_dim = true;
+                        break;
+                    }
+                }
+                if (zero_dim) {
+                    continue;
+                }
+                int n = bots_in_cube(bots, lower, upper);
+                I64 mind = point_cube_distance(origin, lower, upper);
+                M[MKP(-n, mind)].emplace_back(lower, upper);
+            }
+        }
+        int a = 3;
     }
 
     if (0) {
