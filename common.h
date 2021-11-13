@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <charconv>
 #include <chrono>
 #include <climits>
 #include <cmath>
@@ -52,6 +53,7 @@ using VS = vector<string>;
 using VB = vector<bool>;
 using AI2 = array<int, 2>;
 using AI3 = array<int, 3>;
+using AI4 = array<int, 4>;
 template <class T>
 using maybe = optional<T>;
 
@@ -286,14 +288,23 @@ bool starts_with(const string& s, const char* t)
     }
 }
 
+bool ends_with(const string& s, const char* t)
+{
+    auto l = (int)strlen(t);
+    if (~s < l) {
+        return false;
+    }
+    return s.substr(~s - l) == t;
+}
+
 string trim(string s)
 {
     int i = 0;
-    while (i < ~s && iswspace(s[i])) {
+    while (i < ~s && isspace(s[i])) {
         ++i;
     }
     int j = ~s;
-    while (j <= ~s && i < j && iswspace(s[j - 1])) {
+    while (j <= ~s && i < j && isspace(s[j - 1])) {
         --j;
     }
     return s.substr(i, j - i);
@@ -313,20 +324,6 @@ VS split(const string& s, const char* separators)
         token = std::strtok(nullptr, separators);
     }
     return r;
-}
-
-void common_test()
-{
-    FOR (i, 0, < 4) {
-        FOR (j, 0, < 4) {
-            FOR (k, 0, < 4) {
-                auto si = string(i, ' ');
-                auto sj = string(j, 'a');
-                auto sk = string(k, ' ');
-                assert(trim(si + sj + sk) == sj);
-            }
-        }
-    }
 }
 
 template <class T>
@@ -609,4 +606,227 @@ template <class T, size_t N>
 T sum(const array<T, N>& a)
 {
     return accumulate(BE(a), 0);
+}
+
+maybe<char> eat_any_char(string& s)
+{
+    if (s.empty()) {
+        return nullopt;
+    }
+    auto c = s[0];
+    s.erase(0, 1);
+    return c;
+}
+
+bool eat_char(string& s, char c)
+{
+    if (s.empty() || s[0] != c) {
+        return false;
+    }
+    s.erase(0, 1);
+    return true;
+}
+
+bool eat_string(string& s, const string& t)
+{
+    if (starts_with(s, t)) {
+        s = s.substr(~t);
+        return true;
+    }
+    return false;
+}
+
+string eat_chars(string& s, const string& charset)
+{
+    int i = 0;
+    while (i < ~s && charset.find(s[i]) != string::npos) {
+        ++i;
+    }
+    auto result = s.substr(0, i);
+    s = s.substr(i);
+    return result;
+}
+
+void eat_wspace(string& s)
+{
+    int i = 0;
+    while (i < ~s && isspace(s[i])) {
+        ++i;
+    }
+    s = s.substr(i);
+}
+
+template <class T>
+maybe<T> eat_integer(string& s, int base = 10)
+{
+    if (~s >= 1 && s[0] == '0') {
+        s.erase(0, 1);
+        return 0;
+    }
+    if (~s >= 2 && s[0] == '-' && s[1] == '0') {
+        s.erase(0, 2);
+        return 0;
+    }
+    T value;
+    auto r = from_chars(s.c_str(), s.c_str() + ~s, value, base);
+    if (r.ec != errc{}) {
+        return nullopt;
+    }
+    s = s.substr(r.ptr - s.c_str());
+    return value;
+}
+
+template <class T>
+maybe<T> eat_floating(string& s);
+
+template <>
+maybe<float> eat_floating<float>(string& s)
+{
+    if (s.empty() || isspace(s[0])) {
+        return nullopt;
+    }
+    if (~s >= 2 && s[0] == '0' && s[1] != '.') {
+        s.erase(0, 1);
+        return 0;
+    }
+    if (~s >= 3 && s[0] == '-' && s[1] == '0' && s[2] != '.') {
+        s.erase(0, 2);
+        return 0;
+    }
+    char* end = nullptr;
+    auto r = strtof(s.c_str(), &end);
+    if (end == s.c_str()) {
+        return nullopt;
+    }
+    s = s.substr(end - s.c_str());
+    return r;
+}
+
+template <>
+maybe<double> eat_floating<double>(string& s)
+{
+    if (s.empty() || isspace(s[0])) {
+        return nullopt;
+    }
+    if (s.empty() || isspace(s[0])) {
+        return nullopt;
+    }
+    if (~s >= 2 && s[0] == '0' && s[1] != '.') {
+        s.erase(0, 1);
+        return 0;
+    }
+    if (~s >= 3 && s[0] == '-' && s[1] == '0' && s[2] != '.') {
+        s.erase(0, 2);
+        return 0;
+    }
+    char* end = nullptr;
+    auto r = strtod(s.c_str(), &end);
+    if (end == s.c_str()) {
+        return nullopt;
+    }
+    s = s.substr(end - s.c_str());
+    return r;
+}
+
+void common_test()
+{
+    FOR (i, 0, < 4) {
+        FOR (j, 0, < 4) {
+            FOR (k, 0, < 4) {
+                auto si = string(i, ' ');
+                auto sj = string(j, 'a');
+                auto sk = string(k, ' ');
+                assert(trim(si + sj + sk) == sj);
+            }
+        }
+    }
+
+    string s;
+    assert(!eat_any_char(s) && ~s == 0);
+    s = " ";
+    assert(eat_any_char(s) == ' ' && ~s == 0);
+    s = "abc";
+    assert(eat_any_char(s) == 'a' && s == "bc");
+
+    s = "";
+    assert(!eat_char(s, 'a') && ~s == 0);
+    s = "abc";
+    assert(!eat_char(s, 'b') && s == "abc");
+    s = "abc";
+    assert(eat_char(s, 'a') && s == "bc");
+
+    s = "";
+    assert(eat_string(s, "") && ~s == 0);
+    s = "";
+    assert(!eat_string(s, "a") && ~s == 0);
+    s = "abc";
+    assert(!eat_string(s, "bb") && s == "abc");
+    s = "abc";
+    assert(eat_string(s, "ab") && s == "c");
+
+    s = "";
+    assert(eat_chars(s, "") == "" && s == "");
+    s = "";
+    assert(eat_chars(s, "a") == "" && s == "");
+    s = "abc";
+    assert(eat_chars(s, "bc") == "" && s == "abc");
+    s = "abc";
+    assert(eat_chars(s, "ba") == "ab" && s == "c");
+
+    s = "";
+    eat_wspace(s);
+    assert(s == "");
+    s = " \t \t";
+    eat_wspace(s);
+    assert(s == "");
+    s = "a ";
+    eat_wspace(s);
+    assert(s == "a ");
+    s = " a ";
+    eat_wspace(s);
+    assert(s == "a ");
+
+    s = "";
+    assert(!eat_integer<int>(s) && s == "");
+    s = "a";
+    assert(!eat_integer<int>(s) && s == "a");
+    s = "a1";
+    assert(!eat_integer<int>(s) && s == "a1");
+    s = " 1";
+    assert(!eat_integer<int>(s) && s == " 1");
+    s = "1";
+    assert(eat_integer<int>(s) == 1 && s == "");
+    s = "0";
+    assert(eat_integer<int>(s) == 0 && s == "");
+    s = "00";
+    assert(eat_integer<int>(s) == 0 && s == "0");
+    s = "0123";
+    assert(eat_integer<int>(s) == 0 && s == "123");
+    s = "123";
+    assert(eat_integer<int>(s) == 123 && s == "");
+    s = "123a";
+    assert(eat_integer<int>(s) == 123 && s == "a");
+
+    s = "";
+    assert(!eat_floating<double>(s) && s == "");
+    s = "a";
+    assert(!eat_floating<double>(s) && s == "a");
+    s = "a1";
+    assert(!eat_floating<double>(s) && s == "a1");
+    s = " 1";
+    assert(!eat_floating<double>(s) && s == " 1");
+    s = "1";
+    assert(eat_floating<double>(s) == 1 && s == "");
+    s = "0";
+    assert(eat_floating<double>(s) == 0 && s == "");
+    s = "00";
+    assert(eat_floating<double>(s) == 0 && s == "0");
+    s = "0123";
+    assert(eat_floating<double>(s) == 0 && s == "123");
+    s = "123";
+    assert(eat_floating<double>(s) == 123 && s == "");
+    s = "123a";
+    assert(eat_floating<double>(s) == 123 && s == "a");
+    s = "123.456a";
+    assert(fabs(eat_floating<double>(s).value() - 123.456) < 1e-12 && s == "a");
 }
