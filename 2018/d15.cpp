@@ -1,6 +1,6 @@
 #include "common.h"
 
-const int GAP = 3;  // attack power
+const int GAP = 3;   // attack power
 const int EAP = 13;  // attack power
 
 struct Player

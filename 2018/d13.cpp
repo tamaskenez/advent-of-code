@@ -163,10 +163,10 @@ int main()
                 ++nchars;
             }
         }
-        if(nchars==1){
+        if (nchars == 1) {
             for (auto& c : cars) {
                 if (!c.crashed) {
-                    printf("last char %d,%d\n",c.rc[1],c.rc[0]);
+                    printf("last char %d,%d\n", c.rc[1], c.rc[0]);
                     exit(0);
                 }
             }

@@ -367,7 +367,7 @@ void solve()
 
     optional<SearchPos> oxygen_loc_sp;
     for (int current_step_number = 1;; ++current_step_number) {
-        auto[next_frontier, oxygen_loc] = iterate_search(wall, frontier);
+        auto [next_frontier, oxygen_loc] = iterate_search(wall, frontier);
         print(wall);
         if (oxygen_loc) {
             printf("Oxygen reached in %d steps.\n", current_step_number);
@@ -389,7 +389,7 @@ void solve()
     wall.set(AI2{0, 0}, EMPTY);
     frontier.assign(1, move(*oxygen_loc_sp));
     for (int current_step_number = 0;; ++current_step_number) {
-        auto[next_frontier, oxygen_loc] = iterate_search(wall, frontier);
+        auto [next_frontier, oxygen_loc] = iterate_search(wall, frontier);
         print(wall);
         if (next_frontier.empty()) {
             printf("Oxygen filled area in %d steps.\n", current_step_number);

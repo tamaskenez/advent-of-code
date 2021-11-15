@@ -306,7 +306,7 @@ void solve()
 {
     Machine m{main_input};
     VI64 in;
-    auto[out, ni] = run_until_input_needed_or_halt(m, in);
+    auto [out, ni] = run_until_input_needed_or_halt(m, in);
     assert(ni);
     // clang-format off
 const string CODE = R"(NOT A T
@@ -333,7 +333,7 @@ void solve2()
 {
     Machine m{main_input};
     VI64 in;
-    auto[out, ni] = run_until_input_needed_or_halt(m, in);
+    auto [out, ni] = run_until_input_needed_or_halt(m, in);
     assert(ni);
     // clang-format off
     // !A || (D && H);

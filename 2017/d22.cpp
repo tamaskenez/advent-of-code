@@ -102,7 +102,7 @@ void solve2()
                     break;
                 case 'I':
                     dir = right(dir);
-                    it->second='F';
+                    it->second = 'F';
                     break;
                 case 'F':
                     dir = AI2{-dir[0], -dir[1]};
@@ -113,7 +113,7 @@ void solve2()
             }
         } else {
             dir = left(dir);
-            board[carrier]='W';
+            board[carrier] = 'W';
         }
         carrier += dir;
     }

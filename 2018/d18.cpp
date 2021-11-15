@@ -119,7 +119,7 @@ int main()
             if (it != M.end()) {
                 int diff = time_now - it->second;
                 printf("diff: %d\n", diff);
-                int k  = (TOTAL - time_now)/diff;
+                int k = (TOTAL - time_now) / diff;
                 min += k * diff;
             }
 

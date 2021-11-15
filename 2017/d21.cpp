@@ -115,8 +115,8 @@ int main()
         printf("--- AFTER %d ---\n", iter + 1);
         int count = 0;
         FOR (i, 0, < ~board) {
-            auto&row=board[i];
-            assert(~board==~row);
+            auto& row = board[i];
+            assert(~board == ~row);
             FOR (j, 0, < ~row) {
                 auto ch = row[j];
                 if (ch == '#') {
@@ -126,7 +126,7 @@ int main()
             }
             printf("\n");
         }
-        printf("count: %d\n",count);
+        printf("count: %d\n", count);
     }
     return 0;
 }

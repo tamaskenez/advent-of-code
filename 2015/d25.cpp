@@ -18,7 +18,7 @@ int main()
     Code cg;
     // map<PII, u64> codes;
     PII rc(1, 1);
-    for(;;) {
+    for (;;) {
         // codes[rc]=cg.code;
         if (rc == make_pair(2947, 3029)) {
             printf("part1 %s\n", to_string(cg.code).c_str());

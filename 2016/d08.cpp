@@ -101,16 +101,18 @@ int main()
             assert(false);
         }
     }
-    int count=0;
+    int count = 0;
     FOR (y, 0, < H) {
         FOR (x, 0, < W) {
             bool b = screen.mx[y][x];
-                if(b){++count;}
+            if (b) {
+                ++count;
+            }
             printf("%c", b ? 'X' : '.');
         }
         printf("\n");
     }
-    printf("count: %d\n",count);
+    printf("count: %d\n", count);
     return 0;
 }
 

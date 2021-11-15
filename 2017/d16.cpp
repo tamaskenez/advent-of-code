@@ -108,9 +108,9 @@ int main()
                 int diff = steps_done - prev_steps_done;
                 printf("after %d steps = after %d steps (diff=%d)\n", steps_done, prev_steps_done,
                        diff);
-                int to_go = 1000000000-steps_done;
-                to_go = to_go%diff;
-                FOR(j,0,<to_go){
+                int to_go = 1000000000 - steps_done;
+                to_go = to_go % diff;
+                FOR (j, 0, < to_go) {
                     other_s = permute(other_s, vs);
                 }
                 break;

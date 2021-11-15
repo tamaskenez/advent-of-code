@@ -46,7 +46,7 @@ int main()
                 --blhere;
             }
             auto it = encd.find(bs);
-            if (it!=encd.end()) {
+            if (it != encd.end()) {
                 printf("steps %d diff %d \n", steps, steps - it->second);
                 break;
             }

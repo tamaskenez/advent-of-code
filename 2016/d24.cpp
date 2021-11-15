@@ -87,7 +87,7 @@ int main()
     }
     const int H = ~board;
 
- if(0)   {
+    if (0) {
         RunningStat<int> steps;
         do {
             steps.add(solve(targets, board, H, W, start, false));

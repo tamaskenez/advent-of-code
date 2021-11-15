@@ -35,14 +35,14 @@ int main()
 {
     vector<State> front, next_front;
     bool done = false;
-    front.PB(State{"",AI2{0,0}});
+    front.PB(State{"", AI2{0, 0}});
     for (; !done && !front.empty();) {
         next_front.clear();
         for (const auto& st : front) {
             if (st.loc == VAULT) {
                 printf("~path %d path %s\n", ~st.path, st.path.c_str());
-                //done = true;
-                //break;
+                // done = true;
+                // break;
                 continue;
             }
             auto ods = get_open_doors(st.path);

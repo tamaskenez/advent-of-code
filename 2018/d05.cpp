@@ -39,10 +39,10 @@ int main()
     printf("%d\n", c0);
 
     RunningStat<int> rs;
-    for(char cc = 'a'; cc <= 'z'; ++cc){
+    for (char cc = 'a'; cc <= 'z'; ++cc) {
         string nl;
-        for(auto &c:line){
-            if(tolower(c)!=cc){
+        for (auto& c : line) {
+            if (tolower(c) != cc) {
                 nl += c;
             }
         }

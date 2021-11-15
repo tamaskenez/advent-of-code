@@ -8,17 +8,17 @@ unordered_map<int, string> hash_cache;
 string make_hash(int i, bool part2)
 {
     auto it = hash_cache.find(i);
-    if(it!=hash_cache.end()){
+    if (it != hash_cache.end()) {
         return it->second;
     }
     const string INPUT = "ihaygndm";
     auto hash = md5(INPUT + to_string(i));
-    if(part2){
-        FOR(i,0,<2016){
-            hash=md5(hash);
+    if (part2) {
+        FOR (i, 0, < 2016) {
+            hash = md5(hash);
         }
     }
-    hash_cache[i]=hash;
+    hash_cache[i] = hash;
     return hash;
 }
 

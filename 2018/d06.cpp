@@ -20,15 +20,15 @@ int main()
     VI ldixs;
     VI counts(~ps);
     set<int> edgeps;
-    int t10000=0;
+    int t10000 = 0;
     FOR (y, *rsy.lower - d, <= *rsy.upper + d) {
         FOR (x, *rsx.lower - d, <= *rsx.upper + d) {
             int ld = INT_MAX;
             ldixs.clear();
-            int suma=0;
+            int suma = 0;
             FOR (i, 0, < ~ps) {
                 auto md = manhattan(ps[i], AI2{x, y});
-                suma+=md;
+                suma += md;
                 if (md < ld) {
                     ld = md;
                     ldixs.assign(1, i);
@@ -38,9 +38,9 @@ int main()
             }
             bool onedge = (x == *rsx.lower - d || x == *rsx.upper + d) ||
                           (y == *rsy.lower - d || y == *rsy.upper + d);
-            if(suma<10000){
+            if (suma < 10000) {
                 ++t10000;
-                if(onedge){
+                if (onedge) {
                     printf("not good\n");
                     exit(-1);
                 }

@@ -12,7 +12,7 @@ maybe<int64_t> eat_and_eval_single_term(string& s)
         assert(b);
         return *r;
     }
-    assert(!s.empty()&&isdigit(s[0]));
+    assert(!s.empty() && isdigit(s[0]));
     if (auto r = eat_integer<int>(s)) {
         return *r;
     }

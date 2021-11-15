@@ -51,7 +51,7 @@ vector<AI3> nbs(AI3 a)
 {
     assert(!(a[0] == 2 && a[1] == 2));
     vector<AI3> result;
-    auto[r, c, l] = a;
+    auto [r, c, l] = a;
     for (int d : {-1, 1}) {
         auto b = AI3{r + d, c, l};
         if (b[0] == 2 && b[1] == 2) {
@@ -155,7 +155,7 @@ set<AI3> next_phase(const set<AI3>& bugs)
             locs.insert(a);
         }
     } else {
-        auto[mil, mal] = min_max_level(bugs);
+        auto [mil, mal] = min_max_level(bugs);
         FOR (l, mil - 1, <= mal + 1) {
             FOR (r, 0, < 5) {
                 FOR (c, 0, < 5) {
@@ -222,7 +222,7 @@ void solve()
 
 void print(const set<AI3>& bugs)
 {
-    auto[min_level, max_level] = min_max_level(bugs);
+    auto [min_level, max_level] = min_max_level(bugs);
     FOR (level, min_level, <= max_level) {
         printf("\nDepth: %d\n", level);
         FOR (r, 0, < H) {

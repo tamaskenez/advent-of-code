@@ -103,13 +103,14 @@ int main()
             for (auto i : s) {
                 sum += i;
             }
-            int actiter = iter+1;
-            printf("iter %d, %d, 194*actiter-sum %f, 194*actiter-679 %f\n", iter, sum,194.0*actiter-sum, 194.0*actiter-679);
+            int actiter = iter + 1;
+            printf("iter %d, %d, 194*actiter-sum %f, 194*actiter-679 %f\n", iter, sum,
+                   194.0 * actiter - sum, 194.0 * actiter - 679);
             int a = 3;
             break;
         }
     }
-    auto p2 = 194*50000000000LL-679;
+    auto p2 = 194 * 50000000000LL - 679;
     printf("%lld\n", p2);
     return 0;
 }

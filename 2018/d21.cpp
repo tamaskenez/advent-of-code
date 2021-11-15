@@ -58,17 +58,17 @@ struct Vm
         auto vala = [&is]() -> I64 { return is.args[0]; };
         auto valb = [&is]() -> I64 { return is.args[1]; };
 
-        if(ip==28){
+        if (ip == 28) {
             static unordered_set<I64> r2s;
             static vector<I64> so_far;
-            if(contains(r2s, regs[2])){
+            if (contains(r2s, regs[2])) {
                 printf("part2 %lld\n", so_far.back());
                 exit(0);
             }
             so_far.PB(regs[2]);
             r2s.insert(regs[2]);
-            //printf("r2: %lld\n", regs[2]);
-            //exit(0);
+            // printf("r2: %lld\n", regs[2]);
+            // exit(0);
         }
         {
             switch (is.op) {

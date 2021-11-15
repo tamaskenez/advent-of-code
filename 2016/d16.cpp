@@ -36,13 +36,13 @@ string checksum(const string& s)
 
 int main()
 {
-    //const int NN = 272;
+    // const int NN = 272;
     const int NN = 35651584;
     string a = INPUT;
     while (~a < NN) {
         a = do_one_step(a);
     }
-    a=a.substr(0,NN);
+    a = a.substr(0, NN);
     auto r = checksum(a);
     printf("%s\n", r.c_str());
     return 0;

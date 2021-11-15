@@ -13,10 +13,10 @@ label_23:
     I64 f = 1;
     I64 d = 2;
     for (I64 d = 2; d != b; ++d) {
-        if (b%d==0){
-            auto bod = b/d;
-            if(2<=bod&&bod<b){
-                f=0;
+        if (b % d == 0) {
+            auto bod = b / d;
+            if (2 <= bod && bod < b) {
+                f = 0;
             }
         }
         /*
@@ -166,7 +166,7 @@ int main()
     assert(f.good());
     auto lines = read_lines(f);
 
-   if(0) {
+    if (0) {
         Vm vm;
         execute(vm, lines);
         printf("mul count %d\n", vm.mul_count);

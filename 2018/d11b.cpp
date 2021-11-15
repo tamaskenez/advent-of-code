@@ -53,7 +53,7 @@ int main()
     AI3 bxys{-1, -1, -1};
     int bs = INT_MIN;
     FOR (sz, 1, <= 300) {
-        printf("sz %d\n",sz);
+        printf("sz %d\n", sz);
         FOR (x, 1, <= 300 - sz) {
             FOR (y, 1, <= 300 - sz) {
                 int s = sum_power_level(x, y, sz, sz);

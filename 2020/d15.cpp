@@ -1,6 +1,6 @@
 #include "common.h"
 
-vector<int> input = {0,14,1,3,7,9};
+vector<int> input = {0, 14, 1, 3, 7, 9};
 struct N
 {
     int last_turn;
@@ -27,16 +27,16 @@ int main()
 
         most_recent = number_to_say;
         auto it = M.find(number_to_say);
-        if(it==M.end()){
-          M[number_to_say] = N{turn, nullopt};
+        if (it == M.end()) {
+            M[number_to_say] = N{turn, nullopt};
         } else {
-          auto&m=it->second;
+            auto& m = it->second;
             m.second_last_turn = m.last_turn;
-            m.last_turn=turn;
+            m.last_turn = turn;
         }
     }
     printf("p1: %d\n", most_recent.value());
     return 0;
 }
 
-//31.48
+// 31.48

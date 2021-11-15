@@ -2,24 +2,29 @@
 
 #include "common.h"
 
-map<int,int64_t> cache;
+map<int, int64_t> cache;
 
-int64_t countt(const int ix, const VI& xs) {
-  if(ix+1==~xs){return 1;}
-  auto it = cache.find(ix);
-  if(it!=cache.end()){
-    return it->second;
-  }
-  assert(ix<~xs);
-  int64_t r = 0;
-  auto x = xs[ix];
-  FOR(iy,ix+1,<~xs) {
-    auto y = xs[iy];
-    if(y-x>3){break;}
-    r += countt(iy, xs);
-  }
-  cache[ix] = r;
-  return r;
+int64_t countt(const int ix, const VI& xs)
+{
+    if (ix + 1 == ~xs) {
+        return 1;
+    }
+    auto it = cache.find(ix);
+    if (it != cache.end()) {
+        return it->second;
+    }
+    assert(ix < ~xs);
+    int64_t r = 0;
+    auto x = xs[ix];
+    FOR (iy, ix + 1, < ~xs) {
+        auto y = xs[iy];
+        if (y - x > 3) {
+            break;
+        }
+        r += countt(iy, xs);
+    }
+    cache[ix] = r;
+    return r;
 }
 
 int main()
@@ -33,7 +38,7 @@ int main()
     }
     vs.PB(0);
     auto highest = *max_element(BE(vs));
-    vs.PB(highest+3);
+    vs.PB(highest + 3);
     sort(BE(vs));
     map<int, int> ds;
     FOR (i, 1, < ~vs) {
@@ -49,6 +54,5 @@ int main()
     return 0;
 }
 
-//1792 low
-//8 52
-
+// 1792 low
+// 8 52

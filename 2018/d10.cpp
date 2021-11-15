@@ -22,7 +22,7 @@ void print(const vector<PV>& pvs)
         rx.add(pv.p[0]);
         ry.add(pv.p[1]);
     }
-    FOR (y, (*ry.lower), <=(*ry.upper)) {
+    FOR (y, (*ry.lower), <= (*ry.upper)) {
         FOR (x, (*rx.lower), <= (*rx.upper)) {
             if (contains(s, AI2{x, y})) {
                 printf("#");

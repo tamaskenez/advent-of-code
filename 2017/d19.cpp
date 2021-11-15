@@ -8,12 +8,14 @@ const array<AI2, 4> DIRS = {
     AI2{0, -1},
 };
 
-AI2 left(AI2 d){
-    return AI2{-d[1],d[0]};
+AI2 left(AI2 d)
+{
+    return AI2{-d[1], d[0]};
 }
 
-AI2 right(AI2 d){
-    return AI2{d[1],-d[0]};
+AI2 right(AI2 d)
+{
+    return AI2{d[1], -d[0]};
 }
 
 int main()
@@ -44,32 +46,32 @@ int main()
         return line[c];
     };
     string enc;
-    int steps_went=0;
+    int steps_went = 0;
     for (;;) {
         auto ch = at(pos);
-        printf("at %d %d\n", pos[0],pos[1]);
-        if (ch == '|'||ch=='-') {
+        printf("at %d %d\n", pos[0], pos[1]);
+        if (ch == '|' || ch == '-') {
             pos += dir;
-        } else if (isalpha(ch)){
-            printf("found %c\n",ch);
+        } else if (isalpha(ch)) {
+            printf("found %c\n", ch);
             enc += ch;
             pos += dir;
-        } else if (ch=='+'){
-            auto pos2=pos+dir;
-            if(at(pos2)=='|'||at(pos2)=='-'){
-                pos+=dir;
+        } else if (ch == '+') {
+            auto pos2 = pos + dir;
+            if (at(pos2) == '|' || at(pos2) == '-') {
+                pos += dir;
             } else {
                 auto dirleft = left(dir);
                 auto dirright = right(dir);
                 auto cleft = at(pos + dirleft);
-                auto cright = at(pos+dirright);
-                if(cleft==' '){
-                    assert(cright == '|'||cright=='-');
-                    dir=dirright;
+                auto cright = at(pos + dirright);
+                if (cleft == ' ') {
+                    assert(cright == '|' || cright == '-');
+                    dir = dirright;
                     pos += dir;
-                } else if (cright==' '){
-                    assert(cleft == '|'||cleft=='-');
-                    dir=dirleft;
+                } else if (cright == ' ') {
+                    assert(cleft == '|' || cleft == '-');
+                    dir = dirleft;
                     pos += dir;
                 } else {
                     UNREACHABLE;

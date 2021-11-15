@@ -164,12 +164,12 @@ int main()
     }
 
     for (auto& kv : possibles) {
-        assert(~kv.second==1);
-        byte2op[kv.first]=*kv.second.begin();
+        assert(~kv.second == 1);
+        byte2op[kv.first] = *kv.second.begin();
     }
 
-    VI regs(4,0);
-    for(auto&l:program){
+    VI regs(4, 0);
+    for (auto& l : program) {
         auto bytes = map_stoi(split(l, " \t"));
         bytes[0] = byte2op.at(bytes[0]);
         execute(bytes, regs);

@@ -196,7 +196,7 @@ void solve3()
                 }
             }
         }
-         if (do_advance_time) {
+        if (do_advance_time) {
             advance_time();
         }
     }

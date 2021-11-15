@@ -42,7 +42,7 @@ int main()
         }
     }
     RunningStat<int> st;
-    for(auto&kv:regs){
+    for (auto& kv : regs) {
         st.add(kv.second);
     }
     printf("%d\n", *st.upper);

@@ -70,9 +70,9 @@ void solve2()
         parts.PB(Part{p, v, a});
     }
 
-    map<ALI3,int> s;
+    map<ALI3, int> s;
     VI torem;
-    int prev_count=~parts;
+    int prev_count = ~parts;
     for (;;) {
         s.clear();
         FOR (i, 0, < ~parts) {
@@ -80,15 +80,15 @@ void solve2()
         }
         torem.clear();
         FOR (i, 0, < ~parts) {
-            if(s[parts[i].p]>1){
+            if (s[parts[i].p] > 1) {
                 torem.PB(i);
             }
         }
-        FORBACK(i,~torem-1,>=0){
+        FORBACK (i, ~torem - 1, >= 0) {
             parts.erase(parts.begin() + torem[i]);
         }
-        if(~parts!=prev_count){
-            prev_count=~parts;
+        if (~parts != prev_count) {
+            prev_count = ~parts;
             printf("new count: %d\n", prev_count);
         }
         for (auto& part : parts) {
@@ -100,6 +100,6 @@ void solve2()
 
 int main()
 {
-    //solve1();
+    // solve1();
     solve2();
 }

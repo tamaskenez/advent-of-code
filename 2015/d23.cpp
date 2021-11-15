@@ -24,8 +24,9 @@ struct Instr
     string reg;
 };
 
-bool is_even(i64 x){
-    return (x&1)==0;
+bool is_even(i64 x)
+{
+    return (x & 1) == 0;
 }
 
 void execute_instr(Computer& comp, const string& instr)

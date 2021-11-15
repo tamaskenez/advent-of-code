@@ -112,12 +112,12 @@ int main()
                 }
             }
 
-            if(pix.value()==0){
+            if (pix.value() == 0) {
                 dmgq.value() += boost;
             }
 
-            pls[pix.value()].PB(Group{~pls[pix.value()] + 1, units, hitpoints, weaknesses, immunes, dmgq.value(),
-                               dmgtype.value(), initiative.value()});
+            pls[pix.value()].PB(Group{~pls[pix.value()] + 1, units, hitpoints, weaknesses, immunes,
+                                      dmgq.value(), dmgtype.value(), initiative.value()});
         }
     }
     const char* plnames[2] = {"Imm", "Inf"};

@@ -173,7 +173,7 @@ int main()
     }
     print(M);
     int count = 0;
-    int count2=0;
+    int count2 = 0;
     for (auto& kv : M) {
         if ((kv.second == '|' || kv.second == '~') && kv.first[1] >= *ry.lower) {
             ++count;

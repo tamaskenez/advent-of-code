@@ -30,8 +30,8 @@ int main()
     visited.insert(start);
     int steps = 0;
     for (; !done; ++steps) {
-        if(steps==50){
-            printf("at steps = 50, ~visited = %d\n",~visited);
+        if (steps == 50) {
+            printf("at steps = 50, ~visited = %d\n", ~visited);
         }
         assert(!front.empty());
         next_front.clear();

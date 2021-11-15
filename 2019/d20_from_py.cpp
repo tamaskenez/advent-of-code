@@ -19,7 +19,7 @@ map<AI2, char> mkmap(const VS& lines)
 
 vector<AI2> neighbs(AI2 xy)
 {
-    auto[x, y] = xy;
+    auto [x, y] = xy;
     vector<AI2> v = {{x + 1, y}, {x - 1, y}, {x, y + 1}, {x, y - 1}};
     return v;
 }
@@ -100,7 +100,7 @@ void solve()
         auto bit = fr.begin();
         auto& bv = bit->second;
         assert(!bv.empty());
-        auto[d, nxp] = make_tuple(bit->first, bv.back());
+        auto [d, nxp] = make_tuple(bit->first, bv.back());
         bv.pop_back();
         if (bv.empty()) {
             fr.erase(bit);

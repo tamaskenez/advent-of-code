@@ -10,7 +10,7 @@ int main()
         js0.PB(stoi(l));
     }
     {
-        auto js=js0;
+        auto js = js0;
         int pc = 0;
         int steps = 0;
         for (;; ++steps) {
@@ -25,7 +25,7 @@ int main()
         printf("steps %d\n", steps);
     }
     {
-        auto js=js0;
+        auto js = js0;
         int pc = 0;
         int steps = 0;
         for (;; ++steps) {

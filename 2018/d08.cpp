@@ -9,12 +9,16 @@ struct Node
         if (children.empty()) {
             return accumulate(BE(mdes), 0);
         }
-        int s=0;
-        for(auto mde:mdes){
-            if(mde==0){continue;}
-            int ix=mde-1;
-            if(ix<0||~children<=ix){continue;}
-            s+=children[ix].value();
+        int s = 0;
+        for (auto mde : mdes) {
+            if (mde == 0) {
+                continue;
+            }
+            int ix = mde - 1;
+            if (ix < 0 || ~children <= ix) {
+                continue;
+            }
+            s += children[ix].value();
         }
         return s;
     }
@@ -72,8 +76,8 @@ int main()
     assert(i == ~xs);
     printf("%d\n", s);
 
-    i=0;
-    printf("%d\n",read_tree(xs,i).value());
+    i = 0;
+    printf("%d\n", read_tree(xs, i).value());
 
     return 0;
 }

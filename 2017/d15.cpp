@@ -34,7 +34,9 @@ struct Gen2
     {
         for (;;) {
             v = (v * fac) % 2147483647UL;
-            if(v%d==0){return;}
+            if (v % d == 0) {
+                return;
+            }
         }
     }
 };

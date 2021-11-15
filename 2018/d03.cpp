@@ -34,18 +34,20 @@ int main()
         auto id = xs[0];
         auto lt = AI2{stoi(xs[1]), stoi(xs[2])};
         auto wh = AI2{stoi(xs[3]), stoi(xs[4])};
-        bool ok=true;
+        bool ok = true;
         FOR (x, lt[0], < lt[0] + wh[0]) {
             FOR (y, lt[1], < lt[1] + wh[1]) {
-                if(m[AI2{x, y}]>1){
-                    ok=false;
+                if (m[AI2{x, y}] > 1) {
+                    ok = false;
                     break;
                 }
             }
-            if(!ok){break;}
+            if (!ok) {
+                break;
+            }
         }
-        if(ok){
-            printf("%s\n",id.c_str());
+        if (ok) {
+            printf("%s\n", id.c_str());
         }
     }
     return 0;

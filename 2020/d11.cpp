@@ -6,7 +6,7 @@ VS iterate(const VS& A)
     int h = ~A;
     auto B = A;
     FOR (r, 0, < h) {
-        assert(~A[r]==w);
+        assert(~A[r] == w);
         FOR (c, 0, < w) {
             int n_occ = 0;
             FOR (rr, max(r - 1, 0), < min(r + 2, h)) {
@@ -29,15 +29,22 @@ VS iterate(const VS& A)
     return B;
 }
 
-bool is_occupied_towards(AI2 rc, AI2 drc, const VS&A) {
+bool is_occupied_towards(AI2 rc, AI2 drc, const VS& A)
+{
     int w = ~A[0];
     int h = ~A;
-    for(;;){
-      rc += drc;
-      if(rc[0] < 0 || h <= rc[0] || rc[1] < 0 || w <= rc[1]){return false;}
-      auto c = A[rc[0]][rc[1]];
-      if(c=='L'){return false; }
-      if(c=='#'){return true; }
+    for (;;) {
+        rc += drc;
+        if (rc[0] < 0 || h <= rc[0] || rc[1] < 0 || w <= rc[1]) {
+            return false;
+        }
+        auto c = A[rc[0]][rc[1]];
+        if (c == 'L') {
+            return false;
+        }
+        if (c == '#') {
+            return true;
+        }
     }
 }
 
@@ -47,14 +54,16 @@ VS iterate2(const VS& A)
     int h = ~A;
     auto B = A;
     FOR (r, 0, < h) {
-        assert(~A[r]==w);
+        assert(~A[r] == w);
         FOR (c, 0, < w) {
             int n_occ = 0;
-            FOR (dr, -1, <=1) {
-                FOR (dc, -1, <=1) {
-                    if(dr==0&&dc==0){continue;}
-                    if(is_occupied_towards(AI2{r,c},AI2{dr,dc},A)){
-                      n_occ++;
+            FOR (dr, -1, <= 1) {
+                FOR (dc, -1, <= 1) {
+                    if (dr == 0 && dc == 0) {
+                        continue;
+                    }
+                    if (is_occupied_towards(AI2{r, c}, AI2{dr, dc}, A)) {
+                        n_occ++;
                     }
                 }
             }
@@ -113,4 +122,4 @@ int main()
     return 0;
 }
 // 2167 low
-//17
+// 17

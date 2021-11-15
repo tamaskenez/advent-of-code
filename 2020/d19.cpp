@@ -215,10 +215,10 @@ using Tree = unordered_map<int, Node>;
 int add_child_to_node(Tree& tree, maybe<int> node_id, int child_rule_no)
 {
     int new_node_id = ~tree;
-    if(node_id){
-      tree.at(node_id.value()).children.PB(new_node_id);
+    if (node_id) {
+        tree.at(node_id.value()).children.PB(new_node_id);
     } else {
-      assert(tree.empty());
+        assert(tree.empty());
     }
     tree[new_node_id] = Node{child_rule_no, {}};
     return new_node_id;
@@ -309,8 +309,7 @@ set<RemAndTree> try_consuming_with_these_rules(const map<int, RuleRhs>& rules,
         return {};
     }
 
-    auto remainders =
-        try_consuming_with_this_rule(rules, msg, tree, active_node_id, rule_nos[0]);
+    auto remainders = try_consuming_with_this_rule(rules, msg, tree, active_node_id, rule_nos[0]);
     if (remainders.empty()) {
         return {};
     }
@@ -323,65 +322,67 @@ set<RemAndTree> try_consuming_with_these_rules(const map<int, RuleRhs>& rules,
                 shortest = &r;
             }
         }
-        return try_consuming_with_these_rules(rules, shortest->rem, shortest->tree,
-                                              active_node_id, rule_nos_tail);
+        return try_consuming_with_these_rules(rules, shortest->rem, shortest->tree, active_node_id,
+                                              rule_nos_tail);
     } else {
         // Try all of them.
         set<RemAndTree> result;
         for (auto& r : remainders) {
-            auto remainders_after_r = try_consuming_with_these_rules(
-                rules, r.rem, r.tree, active_node_id, rule_nos_tail);
+            auto remainders_after_r =
+                try_consuming_with_these_rules(rules, r.rem, r.tree, active_node_id, rule_nos_tail);
             result.insert(BE(remainders_after_r));
         }
         return result;
     }
 }
 
-void print_tree(const Tree&tree, int node_no=0, int indent=0){
-  auto&node=tree.at(node_no);
-  if(node.children.empty()) {
-    printf("%s%d: T\n", string(indent, '.').c_str(), node.rule_no);
-  } else {
-    printf("%s%d: [", string(indent, '.').c_str(),node.rule_no);
-    for(auto&cnid:node.children) {
-      printf("%d ", tree.at(cnid).rule_no);
+void print_tree(const Tree& tree, int node_no = 0, int indent = 0)
+{
+    auto& node = tree.at(node_no);
+    if (node.children.empty()) {
+        printf("%s%d: T\n", string(indent, '.').c_str(), node.rule_no);
+    } else {
+        printf("%s%d: [", string(indent, '.').c_str(), node.rule_no);
+        for (auto& cnid : node.children) {
+            printf("%d ", tree.at(cnid).rule_no);
+        }
+        printf("]\n");
+        for (auto cnid : node.children) {
+            print_tree(tree, cnid, indent + 2);
+        }
     }
-    printf("]\n");
-    for(auto cnid:node.children) {
-      print_tree(tree, cnid, indent+2);
-    }
-  }
 }
 
-VI generate(const map<int, RuleRhs>& rules, const Tree&tree, int node_no){
-  VI result;
-  auto&node=tree.at(node_no);
-  int rule_no = node.rule_no;
-  auto&rule=rules.at(rule_no);
-  if(node.children.empty()){
-    // Terminal.
-    assert(rule.is_terminal());
-    result.PB(rule_no);
-  } else {
-    assert(!rule.is_terminal());
-    VI child_rules;
-    for(auto&child_node_id:node.children) {
-      child_rules.PB(tree.at(child_node_id).rule_no);
+VI generate(const map<int, RuleRhs>& rules, const Tree& tree, int node_no)
+{
+    VI result;
+    auto& node = tree.at(node_no);
+    int rule_no = node.rule_no;
+    auto& rule = rules.at(rule_no);
+    if (node.children.empty()) {
+        // Terminal.
+        assert(rule.is_terminal());
+        result.PB(rule_no);
+    } else {
+        assert(!rule.is_terminal());
+        VI child_rules;
+        for (auto& child_node_id : node.children) {
+            child_rules.PB(tree.at(child_node_id).rule_no);
+        }
+        bool found = false;
+        for (auto& alt : rule.alts) {
+            if (alt == child_rules) {
+                found = true;
+                break;
+            }
+        }
+        assert(found);
+        for (auto& child_node_id : node.children) {
+            auto s = generate(rules, tree, child_node_id);
+            result.insert(result.end(), BE(s));
+        }
     }
-    bool found=false;
-    for(auto&alt:rule.alts) {
-      if(alt==child_rules){
-        found=true;
-        break;
-      }
-    }
-    assert(found);
-    for(auto&child_node_id:node.children) {
-      auto s= generate(rules, tree, child_node_id);
-      result.insert(result.end(), BE(s));
-    }
-  }
-  return result;
+    return result;
 }
 
 bool is_valid(const map<int, RuleRhs>& rules, const VI& msg)
@@ -391,8 +392,8 @@ bool is_valid(const map<int, RuleRhs>& rules, const VI& msg)
         if (r.rem.empty()) {
             print_tree(r.tree);
             auto g = generate(rules, r.tree, 0);
-            if(msg!=g){
-              assert(false);
+            if (msg != g) {
+                assert(false);
             }
             return true;
         }

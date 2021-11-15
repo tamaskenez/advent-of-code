@@ -84,18 +84,18 @@ int main()
         }
         cand = it->second;
     }
-    i64 total=0;
+    i64 total = 0;
     auto it = ivs.begin();
     total += it->first - 0;
-    for(;;++it){
+    for (;; ++it) {
         auto jt = it;
         ++jt;
-        if(jt==ivs.end()){
+        if (jt == ivs.end()) {
             total += UINT32_MAX - it->second + 1;
             break;
         }
         total += jt->first - it->second;
     }
-    printf("total %lld\n",total);
+    printf("total %lld\n", total);
     return 0;
 }

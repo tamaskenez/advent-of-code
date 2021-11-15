@@ -49,25 +49,26 @@ int main()
     auto lines = read_lines(f);
     int highestsid = -INT_MIN;
     map<int, RC> sids;
-    FOR(r,0,<128){
-      FOR(c,0,<8){
-        auto rc = RC{r,c};
-        sids.insert(make_pair(sid_from_rc(rc), rc));
-      }
+    FOR (r, 0, < 128) {
+        FOR (c, 0, < 8) {
+            auto rc = RC{r, c};
+            sids.insert(make_pair(sid_from_rc(rc), rc));
+        }
     }
     for (auto l : lines) {
         auto rc = rc_from_bsp(l);
         auto sid = sid_from_rc(rc);
         sids.erase(sid);
-        if(sid > highestsid){highestsid=sid;}
+        if (sid > highestsid) {
+            highestsid = sid;
+        }
     }
     printf("P1: %d\n", highestsid);
-    for(auto kv:sids){
-      printf("%d: %d, %d\n", kv.first, kv.second.r, kv.second.c);
+    for (auto kv : sids) {
+        printf("%d: %d, %d\n", kv.first, kv.second.r, kv.second.c);
     }
     return 0;
 }
 
-//1226
-//1843
-
+// 1226
+// 1843

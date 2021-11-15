@@ -26,8 +26,8 @@ int main()
     }*/
 
     for (auto part2 : {false, true}) {
-        if(part2){
-            discs.PB(Disc{11,0});
+        if (part2) {
+            discs.PB(Disc{11, 0});
         }
         for (int i = 0;; ++i) {
             bool all_zero = true;

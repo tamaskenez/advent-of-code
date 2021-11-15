@@ -20,7 +20,7 @@ string apply(const string& s)
     string t;
     int i = 0;
     while (i < ~s) {
-        auto[count, ch] = eat_some(i, s);
+        auto [count, ch] = eat_some(i, s);
         t += (char)('0' + count);
         t += ch;
     }

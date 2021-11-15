@@ -191,7 +191,7 @@ Quant break_down(const map<string, Quant>& input,
 
     // printf("... WINNER %d %s is %f waste\n", output[best_w_ch], best_w_ch.c_str(), best_w);
 
-    auto[bd, surplus] = break_down(output[best_w_ch], best_w_ch, rm);
+    auto [bd, surplus] = break_down(output[best_w_ch], best_w_ch, rm);
     output[best_w_ch] = -surplus;
     for (auto& kv : bd) {
         output[kv.first] += kv.second;

@@ -1,7 +1,7 @@
 #include "common.h"
 
 template <int N>
-using Grid = set<array<int,N>>;
+using Grid = set<array<int, N>>;
 
 vector<AI3> neighbors(AI3 p)
 {
@@ -79,7 +79,7 @@ template <int N>
 Grid<N> sim(const Grid<N>& g)
 {
     Grid<N> h;
-    set<array<int,N>> ss;
+    set<array<int, N>> ss;
     for (auto a : g) {
         auto nbs = neighbors(a);
         ss.insert(BE(nbs));

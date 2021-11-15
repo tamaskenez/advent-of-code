@@ -171,12 +171,12 @@ void execute(Machine& m, vector<Ins> ins);
 
 void execute(Machine& m, VS ins)
 {
-    if(true){
+    if (true) {
         vector<Ins> ins2;
-        for(auto&s:ins){
+        for (auto& s : ins) {
             ins2.PB(string_to_ins(s));
         }
-        execute(m,ins2);
+        execute(m, ins2);
         return;
     }
     int counter = 0;

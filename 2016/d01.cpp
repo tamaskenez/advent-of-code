@@ -11,7 +11,7 @@ int main()
     auto lines = read_lines(f);
     assert(~lines == 1);
     auto line = lines[0];
-    //line = "R8, R4, R4, R8";
+    // line = "R8, R4, R4, R8";
     auto vs = split(line, " ,");
     int dir = 0;
     AI2 here{0, 0};

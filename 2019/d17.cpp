@@ -332,7 +332,7 @@ void solve()
     Machine m{main_input};
     int y = 0;
     int x = 0;
-    auto[outputs, input_needed] = run_until_input_needed_or_halt(m);
+    auto [outputs, input_needed] = run_until_input_needed_or_halt(m);
     assert(!input_needed);
     for (auto r : outputs) {
         if (r == '^') {
@@ -404,7 +404,7 @@ void solve2()
     assert(m.mem[0] == 1);
     m.mem[0] = 2;
 
-    auto[outputs, input_needed] = run_until_input_needed_or_halt(m);
+    auto [outputs, input_needed] = run_until_input_needed_or_halt(m);
     assert(input_needed);
     print(outputs);
 

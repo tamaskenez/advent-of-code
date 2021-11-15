@@ -42,7 +42,7 @@ int main()
     {
         int sum = 0;
         FOR (i, 0, < N) {
-            if (INPUT[i] == (INPUT[(i + N/2) % N])) {
+            if (INPUT[i] == (INPUT[(i + N / 2) % N])) {
                 sum += (INPUT[i] - '0');
             }
         }

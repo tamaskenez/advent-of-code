@@ -19,10 +19,10 @@ int main()
     printf("%d\n", count);
     assert(~lines % 3 == 0);
     array<VS, 3> vs;
-    count=0;
+    count = 0;
     for (int i = 0; i < ~lines; i += 3) {
         FOR (j, 0, < 3) {
-            vs[j] = split(lines[i+j], " ");
+            vs[j] = split(lines[i + j], " ");
         }
         FOR (j, 0, < 3) {
             auto a = stoi(vs[0][j]);

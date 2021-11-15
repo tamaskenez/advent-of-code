@@ -227,7 +227,7 @@ AI2 row_first_last_col(int row)
     for (;; ++x) {
         auto input = VI64{x, row};
         Machine m(main_input);
-        auto[out, inpneed] = run_until_input_needed_or_halt(m, input);
+        auto [out, inpneed] = run_until_input_needed_or_halt(m, input);
         assert(!inpneed);
         assert(~out == 1);
         if (out[0] == 1) {
@@ -239,7 +239,7 @@ AI2 row_first_last_col(int row)
     for (;; ++x) {
         auto input = VI64{x, row};
         Machine m(main_input);
-        auto[out, inpneed] = run_until_input_needed_or_halt(m, input);
+        auto [out, inpneed] = run_until_input_needed_or_halt(m, input);
         assert(!inpneed);
         assert(~out == 1);
         if (out[0] == 1) {
@@ -258,7 +258,7 @@ int main()
         FOR (x, 0, < 50) {
             auto input = VI64{x, y};
             Machine m(main_input);
-            auto[out, inpneed] = run_until_input_needed_or_halt(m, input);
+            auto [out, inpneed] = run_until_input_needed_or_halt(m, input);
             assert(!inpneed);
             assert(~out == 1);
             if (out[0] == 1) {

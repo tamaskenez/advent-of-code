@@ -24,7 +24,7 @@ enum Elems
     CO,
     N_ELEMS
 };
-const char* ELEM_NAMES[] = {"PO","TH","PR","RU","CO"};
+const char* ELEM_NAMES[] = {"PO", "TH", "PR", "RU", "CO"};
 #endif
 
 const int N_FLOORS = 4;

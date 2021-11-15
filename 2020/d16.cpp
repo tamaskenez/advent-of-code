@@ -133,8 +133,8 @@ int main()
     while (!fix_to_process.empty()) {
         bool changed = false;
         for (auto f_ix : fix_to_process) {
-            if (~vus[f_ix] == 1) {,m  
-                fix_to_process.erase(f_ix);
+            if (~vus[f_ix] == 1) {
+                , m fix_to_process.erase(f_ix);
                 auto bound_rule_ix = *vus[f_ix].begin();
                 for (auto other_f_ix : fix_to_process) {
                     vus[other_f_ix].erase(bound_rule_ix);
@@ -148,7 +148,7 @@ int main()
     assert(~my_ticket == NF);
     int64_t p2 = 1;
     FOR (f_ix, 0, < NF) {
-    assert(~vus[f_ix]==1);
+        assert(~vus[f_ix] == 1);
         auto rule_ix = *vus[f_ix].begin();
         auto& rule = rules[rule_ix];
         printf("%s: %d\n", rule.name.c_str(), my_ticket[f_ix]);
@@ -156,8 +156,8 @@ int main()
             p2 *= my_ticket[f_ix];
         }
     }
-  printf("P2: %lld\n", p2);
-    return  0;
+    printf("P2: %lld\n", p2);
+    return 0;
 }
 // 19:43
 // not 434014277

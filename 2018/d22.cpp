@@ -148,7 +148,7 @@ int main()
                     auto jt = best_tentative.find(ns);
                     if (jt == best_tentative.end() || nt < jt->second) {
                         front[nt].PB(ns);
-                        best_tentative[ns]=nt;
+                        best_tentative[ns] = nt;
                     }
                 }
             }
@@ -163,7 +163,7 @@ int main()
                     auto jt = best_tentative.find(ns);
                     if (jt == best_tentative.end() || nt < jt->second) {
                         front[nt].PB(ns);
-                        best_tentative[ns]=nt;
+                        best_tentative[ns] = nt;
                     }
                 }
             }
