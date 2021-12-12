@@ -602,6 +602,52 @@ T sgn(T x)
     return 0;
 }
 
+template <class T, size_t N, class F>
+array<invoke_result_t<F, T>, N> over(const array<T, N>& xs, F&& f)
+{
+    array<invoke_result_t<F, T>, N> r;
+    FOR (i, (size_t)0, < N) {
+        r[i] = f(xs[i]);
+    }
+    return r;
+}
+
+template <class T>
+struct ElemOfRhs
+{
+    const T& lhs;
+    bool operator+=(initializer_list<T> rhs) const { return find(BE(rhs), lhs) != rhs.end(); }
+};
+
+template <class RHS>
+struct ElemOfRhs2
+{
+    typename initializer_list<RHS>::const_iterator b, e;
+};
+
+struct LhsElemOfRhs
+{
+    template <class T>
+    ElemOfRhs2<T> operator+=(initializer_list<T> rhs) const
+    {
+        return ElemOfRhs2<T>{BE(rhs)};
+    }
+};
+
+template <class T>
+bool operator+=(const T& lhs, ElemOfRhs2<T> rhs)
+{
+    return find(rhs.b, rhs.e, lhs) != rhs.e;
+}
+
+template <class T>
+ElemOfRhs<T> operator,(const T& lhs, LhsElemOfRhs)
+{
+    return ElemOfRhs<T>{lhs};
+}
+
+#define ELEM_OF += LhsElemOfRhs{} +=
+
 template <class T, size_t N>
 T sum(const array<T, N>& a)
 {
@@ -859,4 +905,69 @@ void hash_range(std::size_t& seed, It first, It last)
     for (; first != last; ++first) {
         hash_combine(seed, *first);
     }
+}
+
+template <class U, class V>
+vector<pair<typename U::value_type, typename V::value_type>> zip(const U& u, const V& v)
+{
+    using UV = typename U::value_type;
+    using VV = typename V::value_type;
+    auto itu = u.begin();
+    auto itv = v.begin();
+    vector<pair<UV, VV>> r;
+    for (; itu != u.end() && itv != v.end(); ++itu, ++itv) {
+        r.emplace_back(*itu, *itv);
+    }
+    return r;
+}
+
+template <class U, class V>
+map<U, V> to_map(const vector<pair<U, V>>& vs)
+{
+    map<U, V> m;
+    for (auto& kv : vs) {
+        m.insert(kv);
+    }
+    return m;
+}
+
+template <class U, class V, class VIT>
+vector<V> vmap(const map<U, V>& m, VIT it, VIT e)
+{
+    vector<V> vs;
+    for (; it != e; ++it) {
+        vs.PB(m.at(*it));
+    }
+    return vs;
+}
+
+template <class T>
+vector<T> sorted(vector<T> vs)
+{
+    sort(BE(vs));
+    return move(vs);
+}
+
+string join(vector<char> vs, const string& sep)
+{
+    string r;
+    if (!vs.empty()) {
+        r.reserve(~vs + ((~vs - 1) * ~sep));
+        r = vs[0];
+        FOR (i, 1, < ~vs) {
+            r += sep;
+            r += vs[i];
+        }
+    }
+    return r;
+}
+
+template <class IT, class V>
+optional<int> index_of(IT b, IT e, const V& v)
+{
+    auto it = find(b, e, v);
+    if (it == e) {
+        return nullopt;
+    }
+    return it - b;
 }
