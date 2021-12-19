@@ -143,6 +143,16 @@ T manhattan(const array<T, N>& a, const array<T, N>& b)
     return s;
 }
 
+template <class T, size_t N>
+array<T, N> abs(const array<T, N>& a)
+{
+    array<T, N> b;
+    FOR (i, (size_t)0, < N) {
+        b[i] += abs(a[i]);
+    }
+    return b;
+}
+
 using VI64 = vector<int64_t>;
 using i64 = int64_t;
 
@@ -591,7 +601,7 @@ auto cross_product(const array<T, 3>& a, const array<T, 3>& b)
 }
 
 template <class T>
-T sgn(T x)
+int sgn(T x)
 {
     if (x < (T)0) {
         return -1;
@@ -719,6 +729,26 @@ maybe<T> eat_integer(string& s, int base = 10)
         return nullopt;
     }
     s = s.substr(r.ptr - s.c_str());
+    return value;
+}
+
+template <class T>
+maybe<T> eat_integer(string_view& s, int base = 10)
+{
+    if (~s >= 1 && s[0] == '0') {
+        s.remove_prefix(1);
+        return 0;
+    }
+    if (~s >= 2 && s[0] == '-' && s[1] == '0') {
+        s.remove_prefix(2);
+        return 0;
+    }
+    T value;
+    auto r = from_chars(s.data(),s.data()+~s, value, base);
+    if (r.ec != errc{}) {
+        return nullopt;
+    }
+s.remove_prefix(r.ptr - s.data());
     return value;
 }
 
@@ -970,4 +1000,26 @@ optional<int> index_of(IT b, IT e, const V& v)
         return nullopt;
     }
     return it - b;
+}
+
+template <class K, class V>
+vector<V> values(const map<K, V> m)
+{
+    vector<V> vs;
+    vs.reserve(~m);
+    for (auto& [_, v] : m) {
+        vs.PB(v);
+    }
+    return vs;
+}
+
+template <class K, class V>
+vector<K> keys(const map<K, V> m)
+{
+    vector<K> ks;
+    ks.reserve(~m);
+    for (auto& [k, _] : m) {
+        ks.PB(k);
+    }
+    return ks;
 }
