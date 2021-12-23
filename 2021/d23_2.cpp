@@ -1,13 +1,14 @@
 #include "common.h"
 
-//const string input = "BCBDADCA";
-const string input = "DACDCABB";
+// const string input = "BCBDDCBADBACADCA";
+const string input = "DACDDCBADBACCABB";
 
 constexpr int ROW = 0;
 constexpr int COL = 1;
 constexpr int EMPTY = -1;
+constexpr int AM_COUNT = 4;
 
-// space {0,0..10}, {1,0..3}, {2,0..3}
+// space {0, 0..10}, {1, 0..3}, {2, 0..3}, {3, 0..3}, {4, 0..3}
 char boritem_to_char(int a)
 {
     if (a == EMPTY) {
@@ -21,15 +22,15 @@ struct GS
     int cost_so_far = 0;
     int min_remaining_cost = 0;
     int min_full_cost() const { return cost_so_far + min_remaining_cost; }
-    array<array<AI2, 2>, 4> ams;
+    array<array<AI2, AM_COUNT>, 4> ams;
     bool deleted = false;
     bool operator<(const GS& y) const { return min_full_cost() < y.min_full_cost(); }
     auto get_array() const
     {
-        array<char, 19> a;
+        array<char, 27> a;
         a.fill('.');
         FOR (am, 0, < 4) {
-            FOR (si, 0, < 2) {
+            FOR (si, 0, < AM_COUNT) {
                 auto p = ams[am][si];
                 auto ch = boritem_to_char(am);
                 switch (p[ROW]) {
@@ -41,6 +42,12 @@ struct GS
                         break;
                     case 2:
                         a[15 + p[COL]] = ch;
+                        break;
+                    case 3:
+                        a[19 + p[COL]] = ch;
+                        break;
+                    case 4:
+                        a[23 + p[COL]] = ch;
                         break;
                     default:
                         assert(false);
@@ -75,15 +82,15 @@ int am_cost(int am)
 
 void assert_valid_pos(AI2 p)
 {
-    assert(0 <= p[0] && p[0] <= 2);
+    assert(0 <= p[ROW] && p[ROW] <= AM_COUNT);
     if (p[0] == 0) {
-        assert(0 <= p[1] && p[1] <= 10);
+        assert(0 <= p[COL] && p[COL] <= 10);
     } else {
         assert(0 <= p[1] && p[1] <= 3);
     }
 }
 
-using Bor = array<array<int, 11>, 3>;
+using Bor = array<array<int, 11>, AM_COUNT + 1>;
 auto get_empty_bor()
 {
     Bor bor;
@@ -119,21 +126,22 @@ optional<int> get_dist(const Bor& bor, AI2 from, AI2 to)
                     return nullopt;
                 }
             }
-            if (bor[1][to[1]] != EMPTY) {
-                return nullopt;
-            }
-            if (to[ROW] == 2) {
-                if (bor[2][to[COL]] != EMPTY) {
-                    return nullopt;
+            // bor[1..to[ROW]][to[COL] must be empty
+            FOR (r, 1, <= to[ROW]) {
+                if (bor[r][to[COL]] != EMPTY) {
+                    return false;
                 }
             }
             return abs(ep - from[COL]) + to[ROW];
         };
         case 1:
-        case 2: {
+        case 2:
+        case 3:
+        case 4: {
             int ep = entrance_pos(from[COL]);
-            if (from[ROW] == 2) {
-                if (bor[1][from[COL]] != EMPTY) {
+            // bor[1..from[ROW]-1][from[COL]] must be empty
+            FOR (r, 1, < from[ROW] - 1) {
+                if (bor[r][from[COL]] != EMPTY) {
                     return nullopt;
                 }
             }
@@ -151,57 +159,58 @@ optional<int> get_dist(const Bor& bor, AI2 from, AI2 to)
     }
 }
 
-int min_remaining_cost(array<array<AI2, 2>, 4> ams,bool debug=false)
+int min_remaining_cost(array<array<AI2, AM_COUNT>, 4> ams, bool debug = false)
 {
     static const auto bor = get_empty_bor();
     int cost = 0;
-    array<array<AI2, 2>, 4> am_to;
+    array<array<AI2, AM_COUNT>, 4> am_to;
     FOR (am, 0, < 4) {
-        auto p0 = ams[am][0];
-        auto p1 = ams[am][1];
-        if (p0[ROW] > 0 && p0[COL] == am) {
-            am_to[am][0] = p0;
-            if (p1[ROW] > 0 && p1[COL] == am) {
-                am_to[am][1] = p1;
-            } else {
-                am_to[am][1] = AI2{3 - p0[ROW], am};
-            }
-        } else {
-            if (p1[ROW] > 0 && p1[COL] == am) {
-                am_to[am][1] = p1;
-                am_to[am][0] = AI2{3 - p1[ROW], am};
-            } else {
-                am_to[am][0] = AI2{1, am};
-                am_to[am][1] = AI2{2, am};
+        set<int> remaining_rows = {1, 2, 3, 4};
+        FOR (si, 0, < AM_COUNT) {
+            auto p = ams[am][si];
+            if (p[ROW] != 0 && p[COL] == am) {
+                auto c = remaining_rows.erase(p[ROW]);
+                assert(c == 1);
             }
         }
-        assert_valid_pos(am_to[am][0]);
-        assert_valid_pos(am_to[am][1]);
+        FOR (si, 0, < AM_COUNT) {
+            auto p = ams[am][si];
+            if (p[ROW] == 0 || p[COL] != am) {
+                auto it = remaining_rows.begin();
+                auto row = *it;
+                remaining_rows.erase(it);
+                am_to[am][si] = AI2{row, am};
+            } else {
+                am_to[am][si] = p;
+            }
+            assert_valid_pos(am_to[am][si]);
+        }
     }
     FOR (am, 0, < 4) {
-        FOR (si, 0, < 2) {
+        FOR (si, 0, < AM_COUNT) {
             auto from = ams[am][si];
             auto to = am_to[am][si];
             if (from == to) {
                 continue;
             }
             auto dist = get_dist(bor, from, to).value();
-            if(debug){
-                printf("%c: %d %d -> %d %d: %d\n",boritem_to_char(am),from[0],from[1],to[0],to[1],dist);
+            if (debug) {
+                printf("%c: %d %d -> %d %d: %d\n", boritem_to_char(am), from[0], from[1], to[0],
+                       to[1], dist);
             }
             cost += am_cost(am) * dist;
         }
     }
-    return cost;
+    return cost>0?1:0;
 }
 
 auto get_painted_bor(const GS& gs)
 {
     auto bor = get_empty_bor();
     FOR (am, 0, < 4) {
-        FOR (si, 0, < 2) {
+        FOR (si, 0, < AM_COUNT) {
             auto p = gs.ams[am][si];
-            bor[p[0]][p[1]] = am;
+            bor[p[ROW]][p[COL]] = am;
         }
     }
     return bor;
@@ -214,67 +223,79 @@ vector<GS> generate_next_steps(const GS& gs)
     auto bor = get_painted_bor(gs);
     vector<GS> nexts;
     FOR (am, 0, < 4) {
-        FOR (si, 0, < 2) {
+        FOR (si, 0, < AM_COUNT) {
             auto from = gs.ams[am][si];
             switch (from[ROW]) {
                 case 0: {
                     // top row
-                    // if A's cell is like
-                    // .. go to bottom
-                    // .A go to top
+                    // if A's column must be at least one empty then same
                     // otherwise can't go
-                    if (bor[1][am] != EMPTY) {
+                    int r = 0;
+                    assert(bor[0][entrance_pos(am)] == EMPTY);
+                    for (;;) {
+                        if (r < AM_COUNT && bor[r + 1][am] == EMPTY) {
+                            ++r;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (r == 0) {
                         continue;
                     }
-                    AI2 to;
-                    if (bor[2][am] == EMPTY) {
-                        to = AI2{2, am};
-                    } else if (bor[2][am] == am) {
-                        to = AI2{1, am};
-                    } else {
+                    int last_empty_row = r;
+                    for (;;) {
+                        if (r < AM_COUNT && bor[r + 1][am] == am) {
+                            ++r;
+                        } else {
+                            break;
+                        }
+                    }
+                    // r is the last am or last empty
+                    if (r != AM_COUNT) {
                         continue;
                     }
+
+                    auto to = AI2{last_empty_row, am};
+
                     auto dist = get_dist(bor, from, to);
                     if (!dist) {
                         continue;
                     }
                     GS next = gs;
                     next.cost_so_far += am_cost(am) * *dist;
-                    next.ams[am][si]=to;
-                                        next.min_remaining_cost = min_remaining_cost(next.ams);
+                    next.ams[am][si] = to;
+                    next.min_remaining_cost = min_remaining_cost(next.ams);
                     nexts.PB(next);
                 } break;
-                case 1: {
+                case 1:
+                case 2:
+                case 3:
+                case 4: {
                     if (from[COL] == am) {
-                        if (bor[2][am] == am) {
-                            // own room AA -> no next step
+                        // in its column
+                        // must be 0 non-am below
+                        bool found_non_am = false;
+                        FOR (r, from[ROW] + 1, <= AM_COUNT) {
+                            if (bor[r][am] != am) {
+                                found_non_am = true;
+                                break;
+                            }
+                        }
+                        if (!found_non_am) {
                             continue;
-                        }  // else own room AX -> go up
-                    }      // else different room -> go up
-
-                    assert(bor[2][from[COL]] != EMPTY);
-                    // Must go up first
-                    for (auto col : {0, 1, 3, 5, 7, 9, 10}) {
-                        auto to = AI2{0, col};
-                        auto dist = get_dist(bor, from, to);
-                        if (dist) {
-                            auto next = gs;
-                            next.ams[am][si] = to;
-                            next.cost_so_far += *dist * am_cost(am);
-                            next.min_remaining_cost = min_remaining_cost(next.ams);
-                            nexts.PB(next);
                         }
                     }
-                } break;
-                case 2: {
-                    if (from[COL] == am) {
-                        // Don't go anywhere.
-                        continue;
-                    } else {
-                        // different room -> go up
-                        if (bor[1][from[COL]] != EMPTY) {
-                            continue;
+                    // 0 or more empty above
+                    bool do_continue = false;
+                    FOR (r, 1, < from[ROW]) {
+                        if (bor[r][from[COL]] != EMPTY) {
+                            do_continue = true;
+                            break;
                         }
+                    }
+                    if (do_continue) {
+                        continue;
                     }
 
                     // Must go up first
@@ -299,8 +320,8 @@ vector<GS> generate_next_steps(const GS& gs)
         if (n.min_full_cost() < gs.min_full_cost()) {
             print(gs);
             print(n);
-            auto mrc0 = min_remaining_cost(gs.ams,true);
-            auto mrc1 = min_remaining_cost(n.ams,true);
+            auto mrc0 = min_remaining_cost(gs.ams, true);
+            auto mrc1 = min_remaining_cost(n.ams, true);
             printf("");
         }
         assert(n.min_full_cost() >= gs.min_full_cost());
@@ -319,29 +340,27 @@ void print(const GS& gs)
     }
     printf("#\n");
 
-    FOR (r, 1, <= 2) {
-        printf("###");
+    FOR (r, 1, <= AM_COUNT) {
+        printf(r == 1 ? "###" : "  #");
         FOR (am, 0, < 4) {
             printf("%c#", boritem_to_char(bor[r][am]));
         }
-        printf("##\n");
+        printf(r == 1 ? "##\n" : "\n");
     }
-    printf("#########\n");
+    printf("  #########\n");
 }
 
-void P1()
+void P2()
 {
     GS initial;
-    set<int> am_done;
+    array<int, 4> next_am_si;
+    next_am_si.fill(0);
     FOR (i, 0, < ~input) {
         auto c = input[i];
         int am = c - 'A';
-        int si = 0;
-        if (am_done.count(am) > 0) {
-            si = 1;
-        }
-        am_done.insert(am);
-        initial.ams[am][si] = AI2{i < 4 ? 1 : 2, i % 4};
+        int si = next_am_si[am]++;
+        assert(0 <= si && si < AM_COUNT);
+        initial.ams[am][si] = AI2{i / 4 + 1, i % 4};
     }
     initial.min_remaining_cost = min_remaining_cost(initial.ams);
     print(initial);
@@ -374,11 +393,7 @@ void P1()
         }
 
         auto key = next.get_string();
-        //          0123456789a01230123
-        if (key == "...B.C.....B..DADCA") {
-            print(next);
-            printf("");
-        }
+
         auto it = added.find(key);
         assert(it->second == &dq.front());
 
@@ -388,6 +403,12 @@ void P1()
         if (next.min_remaining_cost == 0) {
             printf("P1: %d\n", next.cost_so_far);
             break;
+        }
+
+        //                        0123456789a0123012301230123
+        if (next.get_string() == "..........DBCB.DCBADBACADCA") {
+            print(next);
+            printf("");
         }
 
         auto itb = done.insert(make_pair(next.get_string(), next.cost_so_far));
@@ -427,6 +448,6 @@ void P1()
 
 int main()
 {
-    P1();
+    P2();
     return 0;
 }
