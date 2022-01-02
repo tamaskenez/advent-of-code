@@ -1,0 +1,293 @@
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 12
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 4
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i1 + 4
+div z 1
+add x 11
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 10
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i2 + 10
+div z 1
+add x 14
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 12
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i3 + 12
+div z 26
+:z = ((i1 + 4) * 26 + i2 + 10)
+add x -6
+eql x w
+:x = (i3 + 6 == i4) ? 1 : 0
+eql x 0
+:x = (i3 + 6 == i4) ? 0 : 1
+mul y 0
+add y 25
+mul y x
+:y = (i3 + 6 == i4) ? 0 : 25
+add y 1
+:y = (i3 + 6 == i4) ? 1 : 26
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+:z = (((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)
+inp w
+mul x 0
+add x z
+mod x 26
+:x = ((i3 + 6 == i4) ? i2 + 10 : i4 + 14)
+div z 1
+add x 15
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i5 + 6
+div z 1
+add x 12
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 16
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i6 + 16
+div z 26
+:z = (((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)
+add x -9
+eql x w
+eql x 0
+:x = (i6 + 7 == i7) ? 0 : 1 
+mul y 0
+add y 25
+mul y x
+add y 1
+:y = ((i6 + 7 == i7) ? 1 : 26)
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+:z = ((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)
+inp w
+mul x 0
+add x z
+mod x 26
+:x = (i6 + 7 == i7) ? i5 + 6 : i7 + 1
+div z 1
+add x 14
+:x = ((i6 + 7 == i7) ? i5 + 20 : i7 + 15)
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i8 + 7
+div z 1
+add x 14
+eql x w
+:x = 0
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = i9 + 8
+div z 26
+:z = ((((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)) * 26) + i8 + 7
+add x -5
+eql x w
+:x = (i9 + 3 == i10) ? 1 : 0
+eql x 0
+:x = (i9 + 3 == i10) ? 0 : 1
+mul y 0
+add y 25
+mul y x
+add y 1
+:y = ((i9 + 3 == i10) ? 1 : 26)
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+:y = ((i9 + 3 == i10) ? 0 : i10 + 11)
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = ((i9 + 3 == i10) ? i8 + 7 : i10 + 11)
+div z 26
+:z = ((i9 + 3 == i10) ? (((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)):(((((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)) * 26) + i8 + 7))
+add x -9
+eql x w
+:x = ((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 1 : 0
+eql x 0
+:x = (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 0 : 1)
+mul y 0
+add y 25
+mul y x
+:y = (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 0 : 25)
+add y 1
+:y = (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 1 : 26)
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+:y = (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 0 : i11 + 8)
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+:x = (((((i9 + 3 == i10) ? (((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)):(((((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)) * 26) + i8 + 7))) * (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 1 : 26)) + (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? 0 : i11 + 8)) % 26
+div z 26
+:z = (((((i9 + 3 == i10) ? i8 - 2 : i10 + 2)) == i11) ? ((i6 + 7 == i7) ? ((i9 + 3 == i10) ? ((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) : (((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) : ((i9 + 3 == i10) ? ((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) : (((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * 26 + i7 + 1))) : (((i9 + 3 == i10) ? (((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)):(((((((((i1 + 4) * 26 + i2 + 10)) * ((i3 + 6 == i4) ? 1 : 26) + ((i3 + 6 == i4) ? 0 : i4 + 14)) * 26 + i5 + 6)) * ((i6 + 7 == i7) ? 1 : 26) + ((i6 + 7 == i7) ? 0 : i7 + 1)) * 26) + i8 + 7))))
+add x -5
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 3
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -2
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -7
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
