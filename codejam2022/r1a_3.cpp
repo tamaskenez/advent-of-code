@@ -1087,19 +1087,13 @@ namespace std {
 template <>
 struct hash<VI>
 {
-    std::size_t operator()(const VI& s) const noexcept
-    {
-        return hash_range(BE(s));
-    }
+    std::size_t operator()(const VI& s) const noexcept { return hash_range(BE(s)); }
 };
 
 template <>
 struct hash<vector<VI>>
 {
-    size_t operator()(const vector<VI>& s) const noexcept
-    {
-        return hash_range(BE(s));
-    }
+    size_t operator()(const vector<VI>& s) const noexcept { return hash_range(BE(s)); }
 };
 }  // namespace std
 
@@ -1152,27 +1146,17 @@ int get_min_steps_without_cache(vector<VI> exercises)
         }
     }
 
-    FOR (j, 0, < W) {
-        auto m = min_by_weight[j];
-        if (m == 0) {
-            continue;
-        }
+    for (auto m : min_by_weight) {
         steps += 2 * m;
-        for (auto& e : exercises) {
-            e[j] -= m;
-        }
     }
 
     bool nonzero_left = false;
     for (auto& e : exercises) {
-        if (any_of(BE(e), [](int x) { return x > 0; })) {
-            nonzero_left = true;
-            break;
+        FOR (j, 0, < W) {
+            auto& ej = e[j];
+            ej -= min_by_weight[j];
+            nonzero_left = nonzero_left || ej > 0;
         }
-    }
-
-    for (auto& e : exercises) {
-        assert(all_of(BE(e), [](int x) { return x >= 0; }));
     }
 
     if (!nonzero_left) {
