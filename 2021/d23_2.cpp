@@ -201,7 +201,7 @@ int min_remaining_cost(array<array<AI2, AM_COUNT>, 4> ams, bool debug = false)
             cost += am_cost(am) * dist;
         }
     }
-    return cost>0?1:0;
+    return cost > 0 ? 1 : 0;
 }
 
 auto get_painted_bor(const GS& gs)

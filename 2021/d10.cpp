@@ -68,15 +68,25 @@ int64_t p2_score_for_line(const string& s)
         return 0;
     }
     reverse(BE(stack));
-    int64_t score=0;
-    for(auto c:stack){
-        score*=5;
-        switch(c){
-        case '(':score+=1;break;
-        case '[':score+=2;break;
-        case '{':score+=3;break;
-        case '<':score+=4;break;
-        default:assert(false);break;
+    int64_t score = 0;
+    for (auto c : stack) {
+        score *= 5;
+        switch (c) {
+            case '(':
+                score += 1;
+                break;
+            case '[':
+                score += 2;
+                break;
+            case '{':
+                score += 3;
+                break;
+            case '<':
+                score += 4;
+                break;
+            default:
+                assert(false);
+                break;
         }
     }
     return score;
@@ -96,17 +106,15 @@ int main()
 
     vector<int64_t> vs;
     for (auto l : lines) {
-        auto s=p2_score_for_line(l);
-        if(s!=0){
+        auto s = p2_score_for_line(l);
+        if (s != 0) {
             vs.PB(s);
         }
     }
-    auto it =vs.begin()+vs.size()/2;
-std::nth_element(vs.begin(), it,vs.end());
+    auto it = vs.begin() + vs.size() / 2;
+    std::nth_element(vs.begin(), it, vs.end());
     printf("p2: %lld\n", *it);
     return 0;
 }
-//9 4
-//15 42
-
-
+// 9 4
+// 15 42

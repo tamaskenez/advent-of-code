@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,71 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+void do_case(int t, VI ds)
+{
+    sort(BE(ds));
+    int next_dice_idx = 0;
+    int l = 0;
+    for (; next_dice_idx < ~ds;) {
+        while (ds[next_dice_idx] < l + 1) {
+            ++next_dice_idx;
+            if (next_dice_idx >= ~ds) {
+                break;
+            }
+        }
+        if (next_dice_idx >= ~ds) {
+            break;
+        }
+        assert(ds[next_dice_idx] >= l);
+        ++l;
+        ++next_dice_idx;
+    }
+    printf("Case #%d: %d\n", t, l);
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+vector<int> to_vi(vector<string> vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    FOR (t, 1, <= T) {
+        int N = stoi(read_cin_line());
+        auto ds = to_vi(split(read_cin_line(), " "));
+        do_case(t, ds);
+    }
+    return 0;
 }

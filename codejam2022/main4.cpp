@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,108 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+struct FunSoFar
+{
+    int64_t sum_max_fun_of_closed_chains;
+    int64_t max_fun_of_open_chain;
+};
+
+FunSoFar get_fsf_at(int a, const VI64& Fs, const VI& Ps, const map<int, VI>& Qs)
+{
+    auto it = Qs.find(a);
+    if (it == Qs.end()) {
+        // It's an initiator.
+        return FunSoFar{0, a > 0 ? Fs[a - 1] : 0};
+    }
+    auto& vs = it->second;
+    if (~vs == 1) {
+        // Single module points here, copy its result.
+        auto fsf = get_fsf_at(vs.front(), Fs, Ps, Qs);
+        return FunSoFar{fsf.sum_max_fun_of_closed_chains,
+                        max(fsf.max_fun_of_open_chain, a > 0 ? Fs[a - 1] : 0)};
+    }
+    // Multiple modules point here, aggregate their results.
+    vector<FunSoFar> fsfs;
+    int64_t sum_all_chains = 0;
+    optional<FunSoFar> best_fsf;
+    for (auto v : vs) {
+        auto fsf = get_fsf_at(v, Fs, Ps, Qs);
+        sum_all_chains += fsf.sum_max_fun_of_closed_chains;
+        sum_all_chains += fsf.max_fun_of_open_chain;
+        // It this chain gets chosen:
+        if (!best_fsf || best_fsf->max_fun_of_open_chain > fsf.max_fun_of_open_chain) {
+            best_fsf = fsf;
+        }
+    }
+    return FunSoFar{sum_all_chains - best_fsf->max_fun_of_open_chain,
+                    max(best_fsf->max_fun_of_open_chain, a > 0 ? Fs[a - 1] : 0)};
+}
+
+void do_case(int t, VI64 Fs, VI Ps)
+{
+    map<int, VI> Qs;  // Who points here.
+    auto N = ~Fs;
+    assert(N == ~Ps);
+    FOR (i, 1, <= N) {
+        Qs[Ps[i - 1]].PB(i);
+    }
+    auto fsf = get_fsf_at(0, Fs, Ps, Qs);
+    printf("Case #%d: %lld\n", t, fsf.sum_max_fun_of_closed_chains + fsf.max_fun_of_open_chain);
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+VI to_vi(VS vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+VI64 to_vi64(VS vss)
+{
+    VI64 vi;
+    for (auto s : vss) {
+        vi.push_back(stoll(s));
+    }
+    return vi;
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    FOR (t, 1, <= T) {
+        int N = stoi(read_cin_line());
+        auto Fs = to_vi64(split(read_cin_line(), " "));
+        auto Ps = to_vi(split(read_cin_line(), " "));
+        do_case(t, Fs, Ps);
+    }
+    return 0;
 }

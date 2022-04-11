@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,180 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+VI to_vi(VS vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+VI64 to_vi64(VS vss)
+{
+    VI64 vi;
+    for (auto s : vss) {
+        vi.push_back(stoll(s));
+    }
+    return vi;
+}
+
+default_random_engine dre;
+
+VI64 generate_as(int N)
+{
+    VI64 as;
+    int64_t d = 1;
+    FOR (i, 0, < N - 1) {
+        if (d > 1e9) {
+            break;
+        }
+        as.push_back(d);
+        d *= 2;
+    }
+    d = 1e9;
+    while (~as < N) {
+        as.push_back(d--);
+    }
+    sort_unique_trunc(as);
+    assert(~as == N);
+    return as;
+}
+
+void printvi64(const VI64& as)
+{
+    FOR (i, 0, < ~as) {
+        printf("%lld", as[i]);
+        if (i < ~as - 1) {
+            printf(" ");
+        }
+    }
+    printf("\n");
+    fflush(stdout);
+}
+
+optional<VI64> select_subset(VI64 as, const VI64& bs)
+{
+    auto sa = accumulate(BE(as), (int64_t)0);
+    auto sb = accumulate(BE(bs), (int64_t)0);
+    auto S = sa + sb;
+    assert(is_even(S));
+    auto H = S / 2;
+    set<int64_t> cs(BE(as));
+    cs.insert(BE(bs));
+    // Remove powers of 2
+    int64_t d = 1;
+    for (;;) {
+        if (d > 1e9) {
+            break;
+        }
+        assert(cs.count(d)>0);
+        cs.erase(d);
+        d *= 2;
+    }
+    // Bring down missing sum between 0<=..<d.
+    VI64 ds(BE(cs));
+    int64_t T = 0;
+    VI64 es;
+    for (int i = ~ds - 1; i >= 0 && H - T >= d; --i) {
+        if (ds[i] <= H - T) {
+            es.push_back(ds[i]);
+            T += ds[i];
+        }
+    }
+    assert(0 <= H - T && H - T < d);
+    // Add up T from powers-of-2.
+    d /= 2;
+    while (T < H) {
+        if (d <= H - T) {
+            es.push_back(d);
+            T += d;
+        }
+        if (d == 1) {
+            break;
+        }
+        d /= 2;
+    }
+    assert(T == H);
+    auto Q = ~es;
+    sort_unique_trunc(es);
+    assert(Q == ~es);
+    return es;
+}
+
+int main()
+{
+    const bool test = false;
+    int T = 1;
+    if (!test) {
+        T = stoi(read_cin_line());
+    }
+    FOR (t, 0, < T) {
+        int N = 100;
+        if (!test) {
+            N = stoi(read_cin_line());
+        }
+        VI64 as = generate_as(N);
+        printvi64(as);
+        VI64 bs;
+        if (test) {
+            unordered_set<int64_t> set_as(BE(as));
+            unordered_set<int64_t> set_bs;
+            auto sum_as = accumulate(BE(as), (int64_t)0);
+            int64_t S = sum_as;
+            while ((int)set_bs.size() != N) {
+                auto z = uniform_int_distribution<int64_t>(1, 1e9)(dre);
+                if (set_as.count(z)==0 && set_bs.count(z)==0) {
+                    auto new_S = S + z;
+                    if (~S == N - 1) {
+                        if (!is_even(new_S)) {
+                            continue;
+                        }
+                    }
+                    set_bs.insert(z);
+                    S = new_S;
+                }
+            }
+            bs.assign(BE(set_bs));
+            sort_unique_trunc(bs);
+            assert(~bs == N);
+            assert(is_even(sum_as + accumulate(BE(bs), (int64_t)0)));
+        } else {
+            bs = to_vi64(split(read_cin_line(), " "));
+        }
+        if (auto cs = select_subset(as, bs)) {
+            printvi64(*cs);
+        } else {
+            printf("-1\n");
+            fflush(stdout);
+        }
+    }
+    return 0;
 }

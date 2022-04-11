@@ -14,7 +14,11 @@ struct std::hash<ALL3>
 
 unordered_map<ALL3, optional<string>> cache;
 
-optional<string> get_postfix_on_success(int64_t w, int64_t z, int pc, const VS& lines, int next_input)
+optional<string> get_postfix_on_success(int64_t w,
+                                        int64_t z,
+                                        int pc,
+                                        const VS& lines,
+                                        int next_input)
 {
     auto key = ALL3{w, z, pc};
     auto it = cache.find(key);

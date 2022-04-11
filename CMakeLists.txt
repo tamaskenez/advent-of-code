@@ -29,3 +29,5 @@ foreach(year 2015 2016 2017 2018 2019 2020 2021)
     add_subdirectory(${year})
   endif()
 endforeach()
+
+add_subdirectory(codejam2022)

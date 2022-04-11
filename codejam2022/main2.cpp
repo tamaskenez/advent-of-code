@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,71 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+void do_case(int t, array<AI4, 3> ps)
+{
+    AI4 mn = ps[0];
+    FOR (i, 1, < ~ps) {
+        FOR (j, 0, < ~mn) {
+            mn[j] = min(mn[j], ps[i][j]);
+        }
+    }
+    int s = sum(mn);
+    if (s < 1000000) {
+        printf("Case #%d: IMPOSSIBLE\n", t);
+        return;
+    }
+    // remove s
+    s -= 1000000;
+    FOR (i, 0, < 4) {
+        auto remove_here = min(mn[i], s);
+        mn[i] -= remove_here;
+        s -= remove_here;
+        assert(s >= 0);
+        if (s == 0) {
+            break;
+        }
+    }
+    assert(s == 0);
+    printf("Case #%d: %d %d %d %d\n", t, mn[0], mn[1], mn[2], mn[3]);
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    FOR (t, 1, <= T) {
+        array<AI4, 3> ps;
+        ps[0] = to_ai4(split(read_cin_line(), " "));
+        ps[1] = to_ai4(split(read_cin_line(), " "));
+        ps[2] = to_ai4(split(read_cin_line(), " "));
+        do_case(t, ps);
+    }
+    return 0;
 }

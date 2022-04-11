@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,254 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+VI stoi(VS vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+VI64 to_vi64(VS vss)
+{
+    VI64 vi;
+    for (auto s : vss) {
+        vi.push_back(stoll(s));
+    }
+    return vi;
+}
+
+void printvi64(const VI64& as)
+{
+    FOR (i, 0, < ~as) {
+        printf("%lld", as[i]);
+        if (i < ~as - 1) {
+            printf(" ");
+        }
+    }
+    printf("\n");
+    fflush(stdout);
+}
+
+// -----------------------------
+
+namespace std {
+template <>
+struct hash<VI>
+{
+    std::size_t operator()(const VI& s) const noexcept
+    {
+        return hash_range(BE(s));
+    }
+};
+
+template <>
+struct hash<vector<VI>>
+{
+    size_t operator()(const vector<VI>& s) const noexcept
+    {
+        return hash_range(BE(s));
+    }
+};
+}  // namespace std
+
+unordered_map<int, unordered_map<vector<VI>, int>> cache;
+
+int get_min_steps_without_cache(vector<VI> exercises);
+
+int get_min_steps(vector<VI> exercises)
+{
+    if (exercises.empty()) {
+        return 0;
+    }
+
+    int E = ~exercises;
+    auto it = cache.find(E);
+    if (it != cache.end()) {
+        auto jt = it->second.find(exercises);
+        if (jt != it->second.end()) {
+            assert(jt->second >= 0);
+            return jt->second;
+        }
+    }
+    auto& result_ref = cache[E][exercises];
+    result_ref = -1;
+    result_ref = get_min_steps_without_cache(move(exercises));
+    return result_ref;
+}
+
+int get_min_steps2_without_cache(const vector<VI>& exercises);
+
+int get_min_steps_without_cache(vector<VI> exercises)
+{
+    int steps = 0;
+    // Remove single steps and full spans
+    int E = ~exercises;
+    int W = ~(exercises[0]);
+    VI min_by_weight(W, INT_MAX);
+    FOR (i, 0, < E) {
+        auto& e = exercises[i];
+        FOR (j, 0, < ~e) {
+            int prev = i == 0 ? 0 : exercises[i - 1][j];
+            int& ej = e[j];
+            int next = i == E - 1 ? 0 : exercises[i + 1][j];
+            int singles = ej - max(prev, next);
+            if (singles > 0) {
+                e[j] -= singles;
+                steps += 2 * singles;
+            }
+            min_by_weight[j] = min(min_by_weight[j], ej);
+        }
+    }
+
+    FOR (j, 0, < W) {
+        auto m = min_by_weight[j];
+        if (m == 0) {
+            continue;
+        }
+        steps += 2 * m;
+        for (auto& e : exercises) {
+            e[j] -= m;
+        }
+    }
+
+    bool nonzero_left = false;
+    for (auto& e : exercises) {
+        if (any_of(BE(e), [](int x) { return x > 0; })) {
+            nonzero_left = true;
+            break;
+        }
+    }
+
+    for (auto& e : exercises) {
+        assert(all_of(BE(e), [](int x) { return x >= 0; }));
+    }
+
+    if (!nonzero_left) {
+        return steps;
+    }
+
+    return steps + get_min_steps2_without_cache(exercises);
+}
+
+int get_min_steps2_without_cache(const vector<VI>& exercises)
+{
+    optional<int> best_steps;
+    int E = ~exercises;
+    FOR (i, 0, < E - 1) {
+        auto& e = exercises[i];
+        int W = ~e;
+        // Look at spans starting here.
+        FOR (j, 0, < W) {
+            bool might_start_here = (i == 0 ? 0 : exercises[i - 1][j]) < e[j];
+            if (might_start_here) {
+                // Span: i..<k
+                for (int k = i + 1; k <= E && exercises[k - 1][j] > 0; ++k) {
+                    bool might_end_here;
+                    if (k < E) {
+                        might_end_here = exercises[k - 1][j] > exercises[k][j];
+                    } else {
+                        assert(k == E);
+                        might_end_here = i > 0;
+                    }
+                    if (might_end_here) {
+                        vector<VI> previous_exercises(exercises.begin(), exercises.begin() + i);
+                        vector<VI> new_exercises(exercises.begin() + i, exercises.begin() + k);
+                        vector<VI> subsequent_exercises(exercises.begin() + k, exercises.end());
+
+                        int steps_here = get_min_steps(move(previous_exercises)) +
+                                         get_min_steps(move(new_exercises)) +
+                                         get_min_steps(move(subsequent_exercises));
+                        if (!best_steps || steps_here < *best_steps) {
+                            best_steps = steps_here;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return best_steps.value();
+}
+
+int do_case(vector<VI> exercises)
+{
+    cache.clear();
+    return get_min_steps(move(exercises));
+}
+
+int main()
+{
+    default_random_engine dre;
+    constexpr bool testing = false;
+    int T = testing ? 1000 : stoi(read_cin_line());
+    FOR (t, 0, < T) {
+        VI ew;
+        if (testing) {
+            int E = uniform_int_distribution<>(1, 10)(dre);
+            int W = uniform_int_distribution<>(1, 100)(dre);
+            ew = {E, W};
+        } else {
+            ew = stoi(split(read_cin_line(), " "));
+        }
+        assert(~ew == 2);
+        auto E = ew[0];
+        auto W = ew[1];
+        vector<VI> exercises;
+        exercises.reserve(E);
+        FOR (e, 0, < E) {
+            VI ws;
+            if (testing) {
+                ws.reserve(W);
+                uniform_int_distribution<> uid(0, 100);
+                for (;;) {
+                    bool nonzero = false;
+                    FOR (i, 0, < W) {
+                        auto x = uid(dre);
+                        ws.PB(x);
+                        nonzero = nonzero || x > 0;
+                    }
+                    if (nonzero) {
+                        break;
+                    }
+                    ws.clear();
+                }
+            } else {
+                ws = stoi(split(read_cin_line(), " "));
+            }
+            assert(~ws == W);
+            exercises.PB(move(ws));
+        }
+        auto r = do_case(move(exercises));
+        printf("Case #%d: %d\n", t + 1, r);
+    }
+
+    return 0;
 }

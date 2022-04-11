@@ -1,6 +1,6 @@
 #include "common.h"
 
-//const string input = "BCBDADCA";
+// const string input = "BCBDADCA";
 const string input = "DACDCABB";
 
 constexpr int ROW = 0;
@@ -151,7 +151,7 @@ optional<int> get_dist(const Bor& bor, AI2 from, AI2 to)
     }
 }
 
-int min_remaining_cost(array<array<AI2, 2>, 4> ams,bool debug=false)
+int min_remaining_cost(array<array<AI2, 2>, 4> ams, bool debug = false)
 {
     static const auto bor = get_empty_bor();
     int cost = 0;
@@ -186,8 +186,9 @@ int min_remaining_cost(array<array<AI2, 2>, 4> ams,bool debug=false)
                 continue;
             }
             auto dist = get_dist(bor, from, to).value();
-            if(debug){
-                printf("%c: %d %d -> %d %d: %d\n",boritem_to_char(am),from[0],from[1],to[0],to[1],dist);
+            if (debug) {
+                printf("%c: %d %d -> %d %d: %d\n", boritem_to_char(am), from[0], from[1], to[0],
+                       to[1], dist);
             }
             cost += am_cost(am) * dist;
         }
@@ -240,8 +241,8 @@ vector<GS> generate_next_steps(const GS& gs)
                     }
                     GS next = gs;
                     next.cost_so_far += am_cost(am) * *dist;
-                    next.ams[am][si]=to;
-                                        next.min_remaining_cost = min_remaining_cost(next.ams);
+                    next.ams[am][si] = to;
+                    next.min_remaining_cost = min_remaining_cost(next.ams);
                     nexts.PB(next);
                 } break;
                 case 1: {
@@ -299,8 +300,8 @@ vector<GS> generate_next_steps(const GS& gs)
         if (n.min_full_cost() < gs.min_full_cost()) {
             print(gs);
             print(n);
-            auto mrc0 = min_remaining_cost(gs.ams,true);
-            auto mrc1 = min_remaining_cost(n.ams,true);
+            auto mrc0 = min_remaining_cost(gs.ams, true);
+            auto mrc1 = min_remaining_cost(n.ams, true);
             printf("");
         }
         assert(n.min_full_cost() >= gs.min_full_cost());

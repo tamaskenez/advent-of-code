@@ -28,16 +28,17 @@ bool deal(int r, int c)
     return false;
 }
 
-int m5(int r, int c){
-    int rmod = r%W;
-    int cmod = c%W;
-    int rd = r/W;
-    int cd = c/W;
+int m5(int r, int c)
+{
+    int rmod = r % W;
+    int cmod = c % W;
+    int rd = r / W;
+    int cd = c / W;
     const char* cc = "01234567891234567891........";
     auto ch = int(m[rmod][cmod] - '0');
-    auto dh = cc[ch+rd+cd];
+    auto dh = cc[ch + rd + cd];
     assert(isdigit(dh));
-    return int(dh-'0');
+    return int(dh - '0');
 }
 
 bool deal2(int r, int c)
@@ -70,13 +71,13 @@ void P2(const VS& lines)
     int H = ~lines;
     assert(W == H);
     m = lines;
-    risks = vector<VI>(5*W, VI(5*W, INT_MAX));
+    risks = vector<VI>(5 * W, VI(5 * W, INT_MAX));
     risks[0][0] = 0;
     bool changed = true;
     for (int step = 1; changed; ++step) {
         printf("Step: %d\n", step);
         changed = false;
-        FOR (i, 1, < 5*W) {
+        FOR (i, 1, < 5 * W) {
             FOR (j, 0, < i) {
                 changed = deal2(i, j) || changed;
                 changed = deal2(j, i) || changed;
@@ -84,7 +85,7 @@ void P2(const VS& lines)
             changed = deal2(i, i) || changed;
         }
     }
-    int p1 = risks[5*W - 1][5*W - 1];
+    int p1 = risks[5 * W - 1][5 * W - 1];
     printf("P2: %d\n", p1);
 }
 

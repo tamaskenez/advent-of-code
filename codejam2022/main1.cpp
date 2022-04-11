@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,47 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+void do_case(int t, int R, int C)
+{
+    printf("Case #%d:\n", t);
+    FOR (r, 0, < R) {
+        if (r == 0) {
+            printf("..%s+\n", repeat_string("+-", C - 1).c_str());
+            printf("..%s|\n", repeat_string("|.", C - 1).c_str());
+        } else {
+            printf("%s|\n", repeat_string("|.", C).c_str());
+        }
+        printf("%s+\n", repeat_string("+-", C).c_str());
+    }
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    FOR (t, 1, <= T) {
+        auto ss = split(read_cin_line(), " ");
+        assert(~ss == 2);
+        auto R = stoi(ss[0]);
+        auto C = stoi(ss[1]);
+        do_case(t, R, C);
+    }
+    return 0;
 }

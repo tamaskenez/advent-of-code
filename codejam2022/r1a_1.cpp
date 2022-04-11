@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,86 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+VI to_vi(VS vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+VI64 to_vi64(VS vss)
+{
+    VI64 vi;
+    for (auto s : vss) {
+        vi.push_back(stoll(s));
+    }
+    return vi;
+}
+
+string do_case(string s)
+{
+    if (~s <= 1) {
+        return s;
+    }
+    string z;
+    FOR (i, 0, < ~s - 1) {
+        z += s[i];
+        if (s[i] < s[i + 1]) {
+            z += s[i];
+        } else if (s[i] == s[i + 1]) {
+            bool goes_up = false;
+            FOR (j, i + 1, < ~s - 1) {
+                if (s[j] < s[j + 1]) {
+                    goes_up = true;
+                    break;
+                } else if (s[j] > s[j + 1]) {
+                    break;
+                }
+            }
+            if (goes_up) {
+                z += s[i];
+            }
+        }
+    }
+    z += s.back();
+    return z;
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    FOR (t, 0, < T) {
+        auto s = read_cin_line();
+        printf("Case #%d: %s\n", t + 1, do_case(s).c_str());
+    }
+    return 0;
 }

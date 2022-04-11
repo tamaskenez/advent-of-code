@@ -6,7 +6,9 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <random>
@@ -1022,4 +1024,165 @@ vector<K> keys(const map<K, V> m)
         ks.PB(k);
     }
     return ks;
+}
+
+string read_cin_line()
+{
+    string line;
+    getline(cin, line);
+    return line;
+}
+
+string repeat_string(string s, int n)
+{
+    string r;
+    FOR (i, 0, < n) {
+        r += s;
+    }
+    return r;
+}
+
+AI4 to_ai4(vector<string> vss)
+{
+    assert(~vss == 4);
+    AI4 r;
+    FOR (i, 0, < 4) {
+        r[i] = stoi(vss[i]);
+    }
+    return r;
+}
+VI to_vi(VS vss)
+{
+    VI vi;
+    for (auto s : vss) {
+        vi.push_back(stoi(s));
+    }
+    return vi;
+}
+
+VI64 to_vi64(VS vss)
+{
+    VI64 vi;
+    for (auto s : vss) {
+        vi.push_back(stoll(s));
+    }
+    return vi;
+}
+
+int main()
+{
+    int T = stoi(read_cin_line());
+    fprintf(stderr, "T = %d\n", T);
+    FOR (t, 1, <= T) {
+        auto nk = split(read_cin_line(), " ");
+        assert(~nk == 2);
+        auto N = stoi(nk[0]);  // Number of rooms. Rooms: 1..N.
+        auto K = stoi(nk[1]);  // Max room operations allowed.
+        fprintf(stderr, "N = %d, K = %d\n", N, K);
+        int E = 0;
+        VI random_rooms(N);
+        iota(BE(random_rooms), 1);
+        default_random_engine dre;
+        FOR (i, 0, < N - 1) {
+            uniform_int_distribution<> uid(i, N - 1);
+            auto j = uid(dre);
+            if (i != j) {
+                swap(random_rooms[i], random_rooms[j]);
+            }
+        }
+        struct Room
+        {
+            int n_passages = 0;
+            VI edges;
+        };
+        unordered_map<int, Room> rooms;
+        int next_rroom_idx = 0;
+        optional<int> coming_from_room;
+        FOR (i, 1, <= K + 1) {
+            auto line = read_cin_line();
+            if (line == "-1") {
+                assert(false);
+                exit(EXIT_FAILURE);
+            }
+            auto ripi = split(line, " ");
+            assert(~ripi == 2);
+            auto Ri = stoi(ripi[0]);  // Current room number.
+            auto Pi = stoi(ripi[1]);  // Number of passages here.
+            bool was_here_earlier = rooms.count(Ri) > 0;
+            rooms[Ri].n_passages = Pi;
+            if (coming_from_room) {
+                rooms[*coming_from_room].edges.PB(Ri);
+                rooms[Ri].edges.PB(*coming_from_room);
+                coming_from_room.reset();
+            }
+            if ((int)rooms.size() >= N) {
+                break;
+            }
+            if (!was_here_earlier) {
+                printf("W\n");
+                coming_from_room = Ri;
+                continue;
+            }
+            while (rooms.count(random_rooms[next_rroom_idx]) != 0) {
+                ++next_rroom_idx;
+            }
+            if (i <= K) {
+                printf("T %d\n", random_rooms[next_rroom_idx++]);
+                fflush(stdout);
+                // Outputs:
+                // "W": walk to random passage.
+                // "T S" where S integer: teleport to room S
+                // "E E" second E integer: done, cave contains E passages.
+                // printf("W\n");
+                // printf("T %d\n", S);
+                // printf("E %d\n", E);
+            } else {
+                break;
+            }
+        }
+        // Now emit "E E"
+        vector<int> rooms_not_fully_connected(N);
+        iota(BE(rooms_not_fully_connected), 1);
+        for (auto& [room_number, room] : rooms) {
+            sort_unique_trunc(room.edges);
+            assert(~room.edges <= room.n_passages);
+            if (~room.edges == room.n_passages) {
+                rooms_not_fully_connected[room_number] = -1;
+            }
+        }
+        rooms_not_fully_connected.erase(
+            remove_if(BE(rooms_not_fully_connected), [](int i) { return i == -1; }),
+            rooms_not_fully_connected.end());
+
+        // Randomize rooms_not_full_connected
+        auto RN = ~rooms_not_fully_connected;
+        FOR (i, 0, < RN - 1) {
+            uniform_int_distribution<> uid(i, RN - 1);
+            auto j = uid(dre);
+            if (i != j) {
+                swap(rooms_not_fully_connected[i], rooms_not_fully_connected[j]);
+            }
+        }
+
+        int next_pair_to_connect = 0;
+        while (next_pair_to_connect + 1 < ~rooms_not_fully_connected) {
+            auto r1 = rooms_not_fully_connected[next_pair_to_connect];
+            auto r2 = rooms_not_fully_connected[next_pair_to_connect + 1];
+            auto& rr1 = rooms[r1];
+            auto& rr2 = rooms[r2];
+        }
+
+        int64_t n_passages = 0;
+        for (auto& [room_number, room] : rooms) {
+            n_passages += room.n_passages;
+        }
+        auto avg_n_passages = (double)n_passages / rooms.size();
+        int n_unknown_rooms = N - (int)rooms.size();
+        n_passages += (int64_t)round(n_unknown_rooms * avg_n_passages);
+        n_passages /= 2;
+        fprintf(stderr, "E %lld\n", n_passages);
+        printf("E %lld\n", n_passages);
+        fflush(stdout);
+    }
+    return 0;
 }

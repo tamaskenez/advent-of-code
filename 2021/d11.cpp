@@ -34,13 +34,13 @@ int main()
     w = ~(lines[0]);
 
     int64_t flash_count = 0;
-    for (int step=1;;++step) {
+    for (int step = 1;; ++step) {
         FOR (r, 0, < h) {
             FOR (c, 0, < w) {
                 lines[r][c]++;
             }
         }
-        set<AI2>flashed_now;
+        set<AI2> flashed_now;
         for (;;) {
             set<AI2> flashing;
             FOR (r, 0, < h) {
@@ -48,7 +48,7 @@ int main()
                     if (lines[r][c] > '9') {
                         flashing.insert(AI2{r, c});
                         flashed_now.insert(AI2{r, c});
-                        lines[r][c]='0';
+                        lines[r][c] = '0';
                         flash_count++;
                     }
                 }
@@ -59,16 +59,17 @@ int main()
             for (auto f : flashing) {
                 auto nbs = get_nbs(f[0], f[1]);
                 for (auto nb : nbs) {
-                    if(flashed_now.count(AI2{nb[0],nb[1]})==0){
-                    lines[nb[0]][nb[1]]++;}
+                    if (flashed_now.count(AI2{nb[0], nb[1]}) == 0) {
+                        lines[nb[0]][nb[1]]++;
+                    }
                 }
             }
         }
-        if(step==100){
-    printf("P1: %lld\n", flash_count);
-    }
-        if(~flashed_now==w*h){
-            printf("P2: %d\n",step);
+        if (step == 100) {
+            printf("P1: %lld\n", flash_count);
+        }
+        if (~flashed_now == w * h) {
+            printf("P2: %d\n", step);
             break;
         }
         /*
@@ -82,5 +83,4 @@ int main()
     return 0;
 }
 
-//20 22
-
+// 20 22

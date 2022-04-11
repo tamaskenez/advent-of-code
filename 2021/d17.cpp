@@ -32,7 +32,7 @@ bool is_within(int x, int lo, int hi)
     return lo <= x && x <= hi;
 }
 
-tuple<int,AI2> tryvel(int vx, int vy)
+tuple<int, AI2> tryvel(int vx, int vy)
 {
     Probe p{AI2{0, 0}, AI2{vx, vy}};
     int highest = 0;
@@ -41,25 +41,31 @@ tuple<int,AI2> tryvel(int vx, int vy)
         highest = std::max(highest, p.pos[1]);
         if (is_within(p.pos[0], input_min[0], input_max[0]) &&
             is_within(p.pos[1], input_min[1], input_max[1])) {
-            return {highest,AI2{vx,vy}};
+            return {highest, AI2{vx, vy}};
         }
-        if(p.pos[1]<input_min[1]){
-            return {INT_MIN,AI2{INT_MIN,INT_MIN}};
+        if (p.pos[1] < input_min[1]) {
+            return {INT_MIN, AI2{INT_MIN, INT_MIN}};
         }
     }
 }
 
-struct Result {
-int highest;
-set<AI2> vs;
-bool operator==(const Result&y)const{
-return highest==y.highest && vs.size()==y.vs.size();}
+struct Result
+{
+    int highest;
+    set<AI2> vs;
+    bool operator==(const Result& y) const
+    {
+        return highest == y.highest && vs.size() == y.vs.size();
+    }
 };
 
-void update(Result&r,tuple<int,AI2> hv){
-    auto [highest,v]=hv;
-    if(highest==INT_MIN){return;}
-    r.highest = std::max(r.highest,highest);
+void update(Result& r, tuple<int, AI2> hv)
+{
+    auto [highest, v] = hv;
+    if (highest == INT_MIN) {
+        return;
+    }
+    r.highest = std::max(r.highest, highest);
     r.vs.insert(v);
 }
 
@@ -75,9 +81,9 @@ void P1()
         for (int k = -r + 1; k <= r - 1; ++k) {
             update(result, tryvel(r, k));
         }
-        if(!(prev_result==result)){
-            prev_result=result;
-            printf("r %d, highest %d, unique: %d\n",r,result.highest,~result.vs);
+        if (!(prev_result == result)) {
+            prev_result = result;
+            printf("r %d, highest %d, unique: %d\n", r, result.highest, ~result.vs);
         }
     }
 }
@@ -88,4 +94,4 @@ int main()
     return 0;
 }
 
-//176 no
+// 176 no
