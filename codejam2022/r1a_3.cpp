@@ -1170,36 +1170,26 @@ int get_min_steps2_without_cache(const vector<VI>& exercises)
 {
     optional<int> best_steps;
     int E = ~exercises;
-    FOR (i, 0, < E - 1) {
-        auto& e = exercises[i];
-        int W = ~e;
-        // Look at spans starting here.
-        FOR (j, 0, < W) {
-            bool might_start_here = (i == 0 ? 0 : exercises[i - 1][j]) < e[j];
-            if (might_start_here) {
-                // Span: i..<k
-                for (int k = i + 1; k <= E && exercises[k - 1][j] > 0; ++k) {
-                    bool might_end_here;
-                    if (k < E) {
-                        might_end_here = exercises[k - 1][j] > exercises[k][j];
-                    } else {
-                        assert(k == E);
-                        might_end_here = i > 0;
-                    }
-                    if (might_end_here) {
-                        vector<VI> previous_exercises(exercises.begin(), exercises.begin() + i);
-                        vector<VI> new_exercises(exercises.begin() + i, exercises.begin() + k);
-                        vector<VI> subsequent_exercises(exercises.begin() + k, exercises.end());
-
-                        int steps_here = get_min_steps(move(previous_exercises)) +
-                                         get_min_steps(move(new_exercises)) +
-                                         get_min_steps(move(subsequent_exercises));
-                        if (!best_steps || steps_here < *best_steps) {
-                            best_steps = steps_here;
-                        }
-                    }
-                }
+    int W = ~(exercises[0]);
+    FOR (j, 0, < W) {
+        for(int b = 0; b < E-1; ++b) {
+            if(exercises[b][j]==0) {
+                continue;
             }
+            int e = b + 1;
+            for (; e < E && exercises[e][j] > 0; ++e) {
+            }
+            assert(b!=0||e!=E);
+            vector<VI> previous_exercises(exercises.begin(), exercises.begin() + b);
+            vector<VI> new_exercises(exercises.begin() + b, exercises.begin() + e);
+            vector<VI> subsequent_exercises(exercises.begin() + e, exercises.end());
+            int steps_here = get_min_steps(move(previous_exercises)) +
+                             get_min_steps(move(new_exercises)) +
+                             get_min_steps(move(subsequent_exercises));
+            if (!best_steps || steps_here < *best_steps) {
+                best_steps = steps_here;
+            }
+            b = e-1; // Continues with b = e after increment.
         }
     }
     return best_steps.value();
